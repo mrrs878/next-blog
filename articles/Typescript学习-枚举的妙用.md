@@ -1,8 +1,12 @@
 ---
- title: "typescript学习-枚举的妙用"
- tags: "enum"
- category: "typescript"
+title: "typescript学习-枚举的妙用"
+tags: "enum"
+categories: "typescript"
+description: ""
+createDate: "2021-09-29 13:42:31"
+updateDate: "2021-09-30 14:28:46"
 ---
+
 
 > 参考：[使用数字类型作为标志](https://jkchao.github.io/typescript-book-chinese/typings/enums.html#%E4%BD%BF%E7%94%A8%E6%95%B0%E5%AD%97%E7%B1%BB%E5%9E%8B%E4%BD%9C%E4%B8%BA%E6%A0%87%E5%BF%97)
 
@@ -65,3 +69,5 @@ printAnimalAbilities(animal); // animal has claws, animal can fly
 - 我们使用 |= 来添加一个标志；
 - 组合使用 &= 和 ~ 来清理一个标志；
 - | 来合并标志。
+
+
