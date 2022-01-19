@@ -1,0 +1,273 @@
+/* 全局属性 */
+#write {
+  font-size: 16px;
+  color: black;
+  line-height: 1.6;
+  word-spacing: 0px;
+  letter-spacing: 0px;
+  word-break: break-word;
+  word-wrap: break-word;
+  text-align: left;
+  font-family: Optima-Regular, Optima, PingFangTC-Light, PingFangSC-light, PingFangTC-light, sans-serif;
+  background: linear-gradient(90deg,rgba(200, 200, 200, .1) 3%,transparent 0),
+  linear-gradient(rgba(200, 200, 200, .1) 3%,transparent 0);
+  background-size: 20px 20px;
+}
+
+/*段落*/
+#write p {
+  font-size: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  margin: 0;
+  line-height: 26px;
+  color: black;
+}
+
+
+/*标题*/
+#write h1,
+#write h2,
+#write h3,
+#write h4,
+#write h5,
+#write h6 {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  padding: 0px;
+  font-weight: bold;
+  color: black;
+}
+#write h1 {
+  font-size: 24px;
+  color: rgb(239, 112, 96)
+}
+#write h2 {
+  font-size: 21px;
+  border-bottom: 2px solid rgba(239, 112, 96, 0.8);
+}
+#write h2 .content {
+  display: inline-block;
+  font-weight: bold;
+  background: rgb(239, 112, 96);
+  color: #ffffff;
+  padding: 3px 10px 1px;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  margin-right: 3px;
+}
+#write h2 {
+  position: relative;
+}
+#write h2:after {
+  display: inline-block;
+  content: "";
+  vertical-align: bottom;
+  border-bottom: 36px solid #efebe9;
+  border-right: 20px solid transparent;
+}
+#write h2 {
+  color: rgb(239, 112, 96);
+}
+#write h3 {
+  font-size: 19px;
+}
+#write h4 {
+  font-size: 18px;
+}
+#write h5 {
+  font-size: 16px;
+}
+#write h6 {
+  font-size: 16px;
+}
+
+/*列表*/
+#write ul,
+#write ol {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding-left: 25px;
+  color: black;
+}
+#write ul {
+  list-style-type: disc;
+}
+#write ul ul {
+  list-style-type: square;
+}
+#write ol {
+  list-style-type: decimal;
+}
+#write li section {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  line-height: 26px;
+  text-align: left;
+  color: rgb(1,1,1); /* 只要是纯黑色微信编辑器就会把color这个属性吞掉。。。*/
+  font-weight: 500;
+}
+
+/*引用*/
+#write blockquote {
+  display: block;
+  font-size: 0.9em;
+  overflow: auto;
+  overflow-scrolling: touch;
+  color: #6a737d;
+  padding: 10px 10px 10px 20px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  background: rgba(239, 112, 96, 0.1);
+  border: 1px solid rgba(239, 112, 96, 0.5);
+  border-radius: 10px;
+}
+#write blockquote::before {
+  content: "❝";
+  color: RGBA(239, 112, 96, 0.5);
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 700;
+}
+#write blockquote::after {
+  content: "❞";
+  float: right;
+  color: RGBA(239, 112, 96, 0.5);
+}
+#write blockquote p {
+  margin: 0;
+  color: black;
+  line-height: 26px;
+}
+
+/*链接*/
+#write a {
+  text-decoration: none;
+  word-wrap: break-word;
+  font-weight: bold;
+  border-bottom: 1px solid #1e6bb8;
+  color: rgb(239, 112, 96);
+  border-bottom: 1px solid rgba(239, 112, 96, 0.8);
+}
+
+/*图片*/
+#write img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+/*表格*/
+#write table {
+  display: table;
+  text-align: left;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  border-collapse:collapse;
+}
+#write table td {
+  border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+}
+#write tbody {
+  border: 0;
+}
+#write table tr {
+  border: 0;
+  border-top: 1px solid #ccc;
+  background-color: white;
+}
+#write table tr:nth-child(2n) {
+  background-color: #F8F8F8;
+}
+#write table tr th,
+#write table tr td {
+  font-size: 16px;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  text-align: left;
+}
+#write table tr th {
+  font-weight: bold;
+  background-color: #f0f0f0;
+}
+
+/* 行内代码 */
+#write span code, 
+#write p code, 
+#write li code {
+  font-size: 14px;
+  word-wrap: break-word;
+  padding: 2px 4px;
+  border-radius: 4px;
+  color: rgb(239, 112, 96);
+  background-color: #fff5f5;
+  font-family: Operator Mono, Consolas, Monaco, Menlo, monospace;
+  word-break: break-all;
+}
+
+/* 脚注上标 */
+#write .md-footnote {
+  font-weight: bold;
+  color: rgb(239, 112, 96);
+}
+#write .md-footnote > .md-text:before {
+  content: '['
+}
+#write .md-footnote > .md-text:after {
+  content: ']'
+}
+
+/* 脚注 */
+#write .md-def-name {
+  padding-right: 1.8ch;
+}
+#write .md-def-name:before {
+  content: '[';
+  color: #000;
+}
+#write .md-def-name:after {
+  color: #000;
+}
+
+/* 代码块主题 */
+pre code {
+  border-radius: 5px;
+  display: block;
+  overflow-x: auto;
+  background: #282c34 !important;
+  color: #f8f8f2;
+  padding: .5em;
+}
+pre::before {
+  content: '';
+  display: block;
+  background: url(/point.png);
+  height: 30px;
+  width: 100%;
+  background-size: 40px;
+  background-repeat: no-repeat;
+  background-color: #282c34;
+  margin-bottom: -7px;
+  border-radius: 5px;
+  background-position: 10px 10px;
+}
+
+/* 加粗 */
+#write strong {
+  color: #3594F7;
+  font-weight: bold;
+}
+
+#write strong::before {
+  content: '「';
+}
+
+#write strong::after {
+  content: '」';
+}
+
+code {
+  font-size: 1em;
+  font-family: "SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace !important;
+}
