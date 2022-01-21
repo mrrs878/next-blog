@@ -2,8 +2,10 @@
  * @Author: mrrs878@foxmail.com
  * @Date: 1985-10-26 16:15:00
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-01-21 11:35:09
- */
+ * @LastEditTime: 2022-01-21 11:54:06
+*/
+
+/* eslint-disable no-alert */
 
 import { FC } from 'react';
 import Link from '../components/Link';
