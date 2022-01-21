@@ -2,25 +2,17 @@
  * @Author: mrrs878@foxmail.com
  * @Date: 2022-01-18 21:44:10
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-01-19 19:58:53
+ * @LastEditTime: 2022-01-21 11:30:45
  */
 
 import { readdir, readFile } from 'fs/promises';
 import matter from 'gray-matter';
-import { marked, Renderer } from 'marked';
+import { marked } from 'marked';
 import hljs from 'highlight.js';
-
-const escapeMap = {
-  "&": "&amp;",
-  "<": "&lt;",
-  ">": "&gt;",
-  '"': "&quot;",
-  "'": "&#39;"
-};
 
 marked.setOptions({
   renderer: new marked.Renderer(),
-  highlight: function(code, lang) {
+  highlight(code, lang) {
     const language = hljs.getLanguage(lang) ? lang : 'plaintext';
     return hljs.highlight(code, { language }).value;
   },
@@ -31,33 +23,22 @@ marked.setOptions({
   sanitize: false,
   smartLists: true,
   smartypants: false,
-  xhtml: false
+  xhtml: false,
 });
 
-export async function getPost(slug) {
+export async function getPost(slug: string) {
   const source = await readFile(`articles/${slug}.md`, 'utf8');
-  const { 
-    data, 
+  const {
+    data,
     content,
   } = matter(source);
   const body = marked.parse(content);
-  return {
+  return ({
     ...data,
     body,
     tags: data.tags?.split(' '),
     description: (data.description || content.slice(0, 200))?.trim(),
-  };
-}
-
-export async function getPosts() {
-  const slugs = await getSlugs();
-  const posts = [];
-  for (const slug of slugs) {
-    const post = await getPost(slug);
-    posts.push({ slug, ...post });
-  }
-  const sortedPosts = posts.sort((post1, post2) => new Date(post2.createDate).getTime() - new Date(post1.createDate).getTime())
-  return sortedPosts;
+  }) as IPost;
 }
 
 export async function getSlugs() {
@@ -67,3 +48,13 @@ export async function getSlugs() {
     .map((file) => file.slice(0, -suffix.length));
 }
 
+const sortPosts = (post1: IPost, post2: IPost) => (
+  new Date(post2.createDate).getTime() - new Date(post1.createDate).getTime()
+);
+
+export async function getPosts() {
+  const slugs = await getSlugs();
+  const posts = await Promise.all(slugs.map((slug) => getPost(slug)));
+  const sortedPosts = posts.sort(sortPosts);
+  return sortedPosts;
+}

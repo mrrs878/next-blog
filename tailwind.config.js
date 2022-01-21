@@ -2,7 +2,7 @@
  * @Author: mrrs878@foxmail.com
  * @Date: 2022-01-19 11:36:38
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-01-19 19:56:34
+ * @LastEditTime: 2022-01-21 10:19:50
  */
 
 module.exports = {
@@ -19,4 +19,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
+};

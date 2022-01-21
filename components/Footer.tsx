@@ -2,12 +2,15 @@
  * @Author: mrrs878@foxmail.com
  * @Date: 2022-01-19 20:07:46
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-01-19 20:28:50
+ * @LastEditTime: 2022-01-21 11:08:13
  */
 
 const Footer = () => (
   <footer className="flex flex-col items-center justify-center leading-8 text-sm w-full py-2 border-t text-skin-muted">
-    <p>Designed &amp; developed by<a className="ml-1 text-yellow" target="_blank" href="https://github.com/mrrs878" rel="noreferrer">Mr.RS</a></p>
+    <p>
+      Designed &amp; developed by
+      <a className="ml-1 text-yellow" target="_blank" href="https://github.com/mrrs878" rel="noreferrer">Mr.RS</a>
+    </p>
     <div className="flex items-center justify-center">
       <span>本网站由 </span>
       <a className="cdn-logo-c" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral">

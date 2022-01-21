@@ -2,13 +2,22 @@
  * @Author: mrrs878@foxmail.com
  * @Date: 2022-01-19 11:30:40
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-01-19 19:53:37
+ * @LastEditTime: 2022-01-21 11:08:00
  */
 
-const Article = ({
+import { FC } from 'react';
+
+interface IArticleProps {
+  title: string;
+  createDate: string;
+  updateDate: string;
+  description: string;
+  tags: Array<string>;
+}
+
+const Article: FC<IArticleProps> = ({
   title,
   createDate,
-  updateDate,
   description,
   tags,
 }) => (
@@ -29,7 +38,7 @@ const Article = ({
     </div>
     <span className="absolute transition opacity-0 group-hover:opacity-100 -right-8">
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-yellow">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     </span>
   </article>
