@@ -2,7 +2,7 @@
  * @Author: mrrs878@foxmail.com
  * @Date: 2022-01-19 19:28:28
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-01-21 11:14:20
+ * @LastEditTime: 2022-01-22 15:39:30
  */
 
 import Link from './Link';
@@ -12,13 +12,19 @@ const NavBar = () => (
     <nav>
       <ul className="flex w-auto">
         <li className="mr-4 hover:text-yellow">
-          <Link href="/" title="首页" />
+          <Link href="/">
+            首页
+          </Link>
         </li>
         <li className="mx-4 hover:text-yellow">
-          <Link href="/" title="分类" />
+          <Link href="/">
+            分类
+          </Link>
         </li>
         <li className="ml-4 hover:text-yellow">
-          <Link href="/" title="归档" />
+          <Link href="/">
+            归档
+          </Link>
         </li>
       </ul>
     </nav>

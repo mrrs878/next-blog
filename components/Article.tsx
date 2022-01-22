@@ -2,17 +2,12 @@
  * @Author: mrrs878@foxmail.com
  * @Date: 2022-01-19 11:30:40
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-01-21 11:08:00
+ * @LastEditTime: 2022-01-22 15:46:37
  */
 
 import { FC } from 'react';
 
-interface IArticleProps {
-  title: string;
-  createDate: string;
-  updateDate: string;
-  description: string;
-  tags: Array<string>;
+interface IArticleProps extends Omit<IPost, 'body' | 'categories'> {
 }
 
 const Article: FC<IArticleProps> = ({
