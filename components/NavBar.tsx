@@ -2,7 +2,7 @@
  * @Author: mrrs878@foxmail.com
  * @Date: 2022-01-19 19:28:28
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-01-22 15:39:30
+ * @LastEditTime: 2022-01-22 15:59:30
  */
 
 import Link from './Link';
@@ -17,12 +17,12 @@ const NavBar = () => (
           </Link>
         </li>
         <li className="mx-4 hover:text-yellow">
-          <Link href="/">
+          <Link href="/categories">
             分类
           </Link>
         </li>
         <li className="ml-4 hover:text-yellow">
-          <Link href="/">
+          <Link href="/timeline">
             归档
           </Link>
         </li>

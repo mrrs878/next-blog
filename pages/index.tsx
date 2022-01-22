@@ -2,10 +2,8 @@
  * @Author: mrrs878@foxmail.com
  * @Date: 1985-10-26 16:15:00
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-01-22 15:58:00
+ * @LastEditTime: 2022-01-22 16:40:40
 */
-
-/* eslint-disable no-alert */
 
 import { FC, useState } from 'react';
 import Link from '../components/Link';
@@ -60,7 +58,7 @@ const Home: FC<IHomeProps> = ({
           更多文章......
         </button>
         {
-          (page > 3) && (
+          (page > 2) && (
             <Link href="/timeline">
               <span className="text-yellow">查看全部</span>
             </Link>

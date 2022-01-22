@@ -2,7 +2,7 @@
 * @Author: mrrs878@foxmail.com
 * @Date: 2022-01-19 20:07:46
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-01-21 11:53:43
+ * @LastEditTime: 2022-01-22 16:42:37
 */
 
 /* eslint-disable @next/next/no-img-element */
@@ -13,7 +13,12 @@ const Footer = () => (
       Designed &amp; developed by
       <a className="ml-1 text-yellow" target="_blank" href="https://github.com/mrrs878" rel="noreferrer">Mr.RS</a>
     </p>
-    <div className="flex items-center justify-center">
+    <p>
+      &copy;
+      {' '}
+      {new Date().getFullYear()}
+    </p>
+    {/* <div className="flex items-center justify-center">
       <span>本网站由 </span>
       <a className="cdn-logo-c" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral">
         <img
@@ -24,7 +29,7 @@ const Footer = () => (
         />
       </a>
       <span>提供CDN加速/云存储服务</span>
-    </div>
+    </div> */}
   </footer>
 );
 
