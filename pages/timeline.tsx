@@ -2,7 +2,7 @@
  * @Author: mrrs878@foxmail.com
  * @Date: 2022-01-22 15:59:54
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-01-22 16:45:36
+ * @LastEditTime: 2022-01-23 18:00:56
  */
 
 import { flatten, groupWith } from 'ramda';
@@ -52,16 +52,15 @@ const Timeline: FC<ITimelineProps> = ({
     </p>
     {
       posts.map((post) => (
-        <div key={`${post.createDate} ${post.title}`} className={`mb-8 pb-2 border-dashed border-b ${post.title === '' ? 'text-2xl' : 'hover:text-yellow hover:cursor-pointer'}`}>
-          {
-            post.title === '' ? `${post.createDate} ${post.title}` : (
-              <Link href={`/post/${post.title}`}>
-                {post.createDate}
-                {' '}
-                {post.title}
-              </Link>
-            )
-          }
+        <div
+          key={`${post.createDate} ${post.title}`}
+          className={`mb-8 pb-2 border-dashed border-b hover:text-yellow hover:cursor-pointer ${post.title === '' ? 'text-2xl' : ''}`}
+        >
+          <Link href={post.title === '' ? `/?createDate=${post.createDate}` : `/post/${post.title}`}>
+            {post.createDate}
+            {' '}
+            {post.title}
+          </Link>
         </div>
       ))
     }
