@@ -2,7 +2,7 @@
  * @Author: mrrs878@foxmail.com
  * @Date: 2022-01-23 17:15:04
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-01-23 17:48:39
+ * @LastEditTime: 2022-01-25 20:00:49
  */
 
 import { GetStaticProps } from 'next';
@@ -39,10 +39,13 @@ const Categories: FC<ICategoriesProps> = ({
         Reflect.ownKeys(categories)?.map((category: string) => (
           <li className="mb-4" key={category}>
             <Link href={`/?category=${category}`}>
-              { category }
-              (
-              {categories[category]}
-              )
+              <span className="hover:text-yellow">
+                { category }
+                (
+                {categories[category]}
+                )
+
+              </span>
             </Link>
           </li>
         ))
