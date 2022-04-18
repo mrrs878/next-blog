@@ -1,0 +1,189 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><title>Mr.RS的个人博客-检测自定义字体是否加载</title><meta name="next-head-count" content="3"/><link rel="preload" href="/next-blog/_next/static/css/1bf96eec8dc413e7.css" as="style"/><link rel="stylesheet" href="/next-blog/_next/static/css/1bf96eec8dc413e7.css" data-n-g=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/next-blog/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/next-blog/_next/static/chunks/webpack-cf185e4b59cdddcf.js" defer=""></script><script src="/next-blog/_next/static/chunks/framework-91d7f78b5b4003c8.js" defer=""></script><script src="/next-blog/_next/static/chunks/main-1c9e93b8392c1bc9.js" defer=""></script><script src="/next-blog/_next/static/chunks/pages/_app-ca6aae25bc99a05f.js" defer=""></script><script src="/next-blog/_next/static/chunks/899-1cd3a59abdb8ea18.js" defer=""></script><script src="/next-blog/_next/static/chunks/pages/post/%5Btitle%5D-406bad804ceffd1d.js" defer=""></script><script src="/next-blog/_next/static/VEO_ERUabz6t4SXdQFN9R/_buildManifest.js" defer=""></script><script src="/next-blog/_next/static/VEO_ERUabz6t4SXdQFN9R/_ssgManifest.js" defer=""></script><script src="/next-blog/_next/static/VEO_ERUabz6t4SXdQFN9R/_middlewareManifest.js" defer=""></script></head><body><div id="__next" data-reactroot=""><header class="fixed top-0 py-4 left-0 right-0 h-auto px-10 shadow bg-white z-50"><nav><ul class="flex w-auto"><li class="mr-4 hover:text-yellow"><a href="/next-blog">首页</a></li><li class="mx-4 hover:text-yellow"><a href="/next-blog/categories">分类</a></li><li class="mx-4 hover:text-yellow"><a href="/next-blog/tags">标签</a></li><li class="ml-4 hover:text-yellow"><a href="/next-blog/timeline">归档</a></li></ul></nav></header><main class="mt-20 mb-4 mx-auto justify-center w-2/3"><div class="mx-auto lg:max-w-5xl md:max-w-3xl"><article class="flex flex-col justify-around pb-16 px-4 mx-auto space-y-10 text-base"><div class="flex flex-col space-y-4"><h1 class="inline pt-10 text-4xl text-skin-primary">检测自定义字体是否加载</h1><div class="text-sm space-x-2 text-skin-muted"><span><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline-block mr-1"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>2022-04-18 20:52:22</span><span><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline-block mr-1"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>44</span></div></div><div class="mt-8 flex"><div class="w-full flex-auto custom-markdown-body"><div class="markdown-body" id="write"><p>我们可以通过加载自定义字体来实现字体反爬虫，那么如何检测字体是否正常加载呢？</p>
+<p>有几个维度的检测：</p>
+<ol>
+<li><p>检测字体是否加载成功</p>
+</li>
+<li><p>检测内容是否正常渲染</p>
+</li>
+</ol>
+<h2 id="检测字体是否加载">检测字体是否加载</h2>
+<p>最简单的方法是使用浏览器提供的<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/FontFaceSet">FontFaceSet API</a>来检测，其中要用到的是<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/FontFaceSet/check">FontFaceSet.check()</a></p>
+<blockquote>
+<p>FontFaceSet 的check()方法会返回是否在给定的字体列表中的所有字体已经被加载并可用。--MDN</p>
+</blockquote>
+<p>示例：</p>
+<pre><code class="hljs language-js"><span class="hljs-variable language_">document</span>.<span class="hljs-property">fonts</span>.<span class="hljs-title function_">check</span>(<span class="hljs-string">&quot;12px courier&quot;</span>);
+
+<span class="hljs-variable language_">document</span>.<span class="hljs-property">fonts</span>.<span class="hljs-title function_">check</span>(<span class="hljs-string">&quot;12px MyFont&quot;</span>，<span class="hljs-string">&quot;ß&quot;</span>); <span class="hljs-comment">// 如果字体“MyFont”具有ß字符，则返回true。</span>
+</code></pre>
+<p>但这个检测较为简陋，无法检测字体错误的情况（字体正常加载，但不是我们想要的，页面上显示乱码）</p>
+<h2 id="检测内容是否正常渲染">检测内容是否正常渲染</h2>
+<p>针对这种情况，我们可以使用一些比较骚的操作：</p>
+<ol>
+<li><p>创建一个span标签</p>
+</li>
+<li><p>给标签添加特定字符</p>
+</li>
+<li><p>重置字体样式</p>
+</li>
+<li><p>分别测量在添<code>font-family</code>前后标签大小</p>
+</li>
+<li><p>大小一致 ? 字体加载失败 : 字体加载成功</p>
+</li>
+</ol>
+<p>（这里要创建<code>span</code>标签，如果是<code>div</code>的话宽度默认占满，无法测量真实的大小）</p>
+<p>使用代码表示就是：</p>
+<pre><code class="hljs language-js"><span class="hljs-comment">/**
+ * 检测字体是否正常渲染
+ * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} font 字体名称
+ * <span class="hljs-doctag">@param</span> {<span class="hljs-type">Array&lt;string&gt;</span>} phrase 待匹配的字符
+ * <span class="hljs-doctag">@return</span> {<span class="hljs-type">boolean</span>} 是否存在该字体
+ */</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">checkFont</span>(<span class="hljs-params">font, phrase</span>) {
+
+  <span class="hljs-comment">/**
+   * 可以使用上述的 FontFaceSet API 作简要的判断，如果字体都不存在，那么肯定渲染失败
+   */</span>
+  <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">document</span>.<span class="hljs-property">fonts</span>) {
+    <span class="hljs-keyword">const</span> fonts = [...<span class="hljs-variable language_">document</span>.<span class="hljs-property">fonts</span>];
+    <span class="hljs-keyword">if</span> (fonts.<span class="hljs-title function_">findIndex</span>(<span class="hljs-function">(<span class="hljs-params">f</span>) =&gt;</span> f.<span class="hljs-property">family</span> === font) === -<span class="hljs-number">1</span>) {
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;font dose not exist&#x27;</span>);
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    }
+  }
+
+  <span class="hljs-comment">// 创建一个空的 span 标签来填充内容</span>
+  <span class="hljs-keyword">let</span> node = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;span&quot;</span>);
+
+  <span class="hljs-comment">// 因为可以同时检测多个字符，因此需要存储一下各个字符的大小</span>
+  <span class="hljs-keyword">const</span> sizes = [];
+
+  <span class="hljs-comment">/**
+   * 计算单个字符的尺寸
+   * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} char 待计算的字符
+   */</span>
+  <span class="hljs-keyword">function</span> <span class="hljs-title function_">checkChar</span>(<span class="hljs-params">char</span>) {
+    <span class="hljs-comment">// 重置字体</span>
+    node.<span class="hljs-property">style</span>.<span class="hljs-property">fontFamily</span> = <span class="hljs-string">&quot;sans-serif&quot;</span>;
+    
+    <span class="hljs-comment">// 填充内容</span>
+    node.<span class="hljs-property">innerHTML</span> = char;
+
+    <span class="hljs-keyword">const</span> size = {};
+
+    <span class="hljs-comment">// 先保存未设置字体时的尺寸</span>
+    size.<span class="hljs-property">withoutFont</span> = {
+      <span class="hljs-attr">width</span>: node.<span class="hljs-property">offsetWidth</span>,
+      <span class="hljs-attr">height</span>: node.<span class="hljs-property">offsetHeight</span>,
+    };
+
+    <span class="hljs-comment">// 设置待检测的字体</span>
+    node.<span class="hljs-property">style</span>.<span class="hljs-property">fontFamily</span> = font + <span class="hljs-string">&quot;, sans-serif&quot;</span>;
+
+    <span class="hljs-comment">// 保存设置字体后的尺寸</span>
+    size.<span class="hljs-property">withFont</span> = {
+      <span class="hljs-attr">width</span>: node.<span class="hljs-property">offsetWidth</span>,
+      <span class="hljs-attr">height</span>: node.<span class="hljs-property">offsetHeight</span>,
+    };
+
+    <span class="hljs-comment">// 保存该字符设置字体/未设置字体时的尺寸，待字符计算完毕后统一计算</span>
+    sizes.<span class="hljs-title function_">push</span>(size);
+  }
+
+  <span class="hljs-comment">// 隐藏该 span 标签</span>
+  node.<span class="hljs-property">style</span>.<span class="hljs-property">position</span> = <span class="hljs-string">&quot;absolute&quot;</span>;
+  node.<span class="hljs-property">style</span>.<span class="hljs-property">left</span> = <span class="hljs-string">&quot;-10000px&quot;</span>;
+  node.<span class="hljs-property">style</span>.<span class="hljs-property">top</span> = <span class="hljs-string">&quot;-10000px&quot;</span>;
+
+  <span class="hljs-comment">// 字体大小设置大些误差小（offsetWidth和offsetHeight会四舍五入）</span>
+  node.<span class="hljs-property">style</span>.<span class="hljs-property">fontSize</span> = <span class="hljs-string">&quot;300px&quot;</span>;
+
+  <span class="hljs-comment">// 重置字体样式</span>
+  node.<span class="hljs-property">style</span>.<span class="hljs-property">fontFamily</span> = <span class="hljs-string">&quot;sans-serif&quot;</span>;
+  node.<span class="hljs-property">style</span>.<span class="hljs-property">fontVariant</span> = <span class="hljs-string">&quot;normal&quot;</span>;
+  node.<span class="hljs-property">style</span>.<span class="hljs-property">fontStyle</span> = <span class="hljs-string">&quot;normal&quot;</span>;
+  node.<span class="hljs-property">style</span>.<span class="hljs-property">fontWeight</span> = <span class="hljs-string">&quot;normal&quot;</span>;
+  node.<span class="hljs-property">style</span>.<span class="hljs-property">letterSpacing</span> = <span class="hljs-string">&quot;0&quot;</span>;
+
+  <span class="hljs-comment">// 插入页面中才会有 offsetWidth 和 offsetHeight</span>
+  <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">appendChild</span>(node);
+
+  <span class="hljs-comment">// 计算每一个字符的尺寸</span>
+  phrase.<span class="hljs-title function_">forEach</span>(checkChar);
+
+  <span class="hljs-comment">/**
+   * 1. 当 offsetWidth 和 offsetHeight 均不相同时说明字体存在
+   * 2. 有一个字符的尺寸相同就说明字体有误
+   */</span>
+  <span class="hljs-keyword">const</span> res =
+    node &amp;&amp;
+    sizes.<span class="hljs-title function_">reduce</span>(
+      <span class="hljs-function">(<span class="hljs-params">acc, cur</span>) =&gt;</span>
+        acc &amp;&amp;
+        (cur.<span class="hljs-property">withFont</span>.<span class="hljs-property">width</span> !== cur.<span class="hljs-property">withoutFont</span>.<span class="hljs-property">width</span> ||
+          cur.<span class="hljs-property">withFont</span>.<span class="hljs-property">height</span> !== cur.<span class="hljs-property">withoutFont</span>.<span class="hljs-property">height</span>),
+      <span class="hljs-literal">true</span>
+    );
+
+  <span class="hljs-comment">// 做一些善后工作</span>
+  node.<span class="hljs-property">parentNode</span>.<span class="hljs-title function_">removeChild</span>(node);
+  node = <span class="hljs-literal">null</span>;
+
+  <span class="hljs-keyword">return</span> res;
+}
+</code></pre>
+<h2 id="指数退避算法检测内容是否正常渲染">指数退避算法检测内容是否正常渲染</h2>
+<p>由于网络字体的加载需要时间，我们可通过简单地设置一个延时调用上述的<code>checkFont</code>，但可能有更好的方式来实现：<a href="https://cloud.google.com/memorystore/docs/redis/exponential-backoff?hl=zh-cn">指数退避算法</a></p>
+<p>（自己理解）简单来讲就是在不超过所设置的时间范围内，以指数级超市时间定期重试</p>
+<p>示例：</p>
+<ol>
+<li><p>向服务端发送请求</p>
+</li>
+<li><p>失败？等待1秒后重试</p>
+</li>
+<li><p>失败？等待2秒后重试</p>
+</li>
+<li><p>失败？等待4秒后重试</p>
+</li>
+<li><p>失败？等待8秒后重试</p>
+</li>
+<li><p>以此类推，直到达到超时时间</p>
+</li>
+</ol>
+<p>在检测字体是否正常加载时，我们也可以使用该算法来更好地检测</p>
+<p>（也可使用<a href="https://developer.mozilla.org/en-US/docs/Web/API/FontFaceSet/loadingdone_event">FontFaceSet: loadingdone event</a>来作为时间点检测）</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">const</span> <span class="hljs-title function_">check</span> = (<span class="hljs-params">phrase, options = { timeout: <span class="hljs-number">8192</span> }</span>) =&gt; {
+  <span class="hljs-keyword">function</span> <span class="hljs-title function_">doCheck</span>(<span class="hljs-params">t</span>) {
+    <span class="hljs-keyword">let</span> tid = <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
+      <span class="hljs-built_in">clearTimeout</span>(tid);
+      tid = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">const</span> res = <span class="hljs-title function_">checkFont</span>(<span class="hljs-string">&quot;m-font&quot;</span>, phrase);
+      <span class="hljs-keyword">if</span> (res) {
+        <span class="hljs-comment">// success!</span>
+      }
+      <span class="hljs-keyword">if</span> (!res &amp;&amp; (t &lt;&lt; <span class="hljs-number">1</span> &lt; options.<span class="hljs-property">timeout</span>)) {
+        <span class="hljs-title function_">doCheck</span>(t &lt;&lt; <span class="hljs-number">1</span>);
+      }
+      <span class="hljs-keyword">if</span> (!res &amp;&amp; (t &lt;&lt; <span class="hljs-number">1</span>) &gt;= options.<span class="hljs-property">timeout</span>) {
+        <span class="hljs-comment">// parse error!</span>
+      }
+    }, t);
+  }
+
+  <span class="hljs-comment">// 我们可以以64ms为起始时间点</span>
+  <span class="hljs-title function_">doCheck</span>(<span class="hljs-number">2</span> &lt;&lt; <span class="hljs-number">5</span>);
+};
+</code></pre>
+<h2 id="总结">总结</h2>
+<ol>
+<li><p>可使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/FontFaceSet">FontFaceSet API</a>来做简单的字体是否加载判断，但无法检测字体是否正常渲染</p>
+</li>
+<li><p>不同字体下，大概率各个字符的大小是不一样的，可依次来检测字体是否正常渲染</p>
+</li>
+</ol>
+<p>结束！</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/FontFaceSet">FontFaceSet API</a></p>
+<p><a href="https://stackoverflow.com/questions/65095157/how-can-i-detect-when-a-font-is-downloaded-via-csss-unicode-range-descriptor">How can I detect when a font is downloaded via CSS&#39;s &quot;unicode-range&quot; descriptor? </a></p>
+<p><a href="https://cloud.google.com/memorystore/docs/redis/exponential-backoff?hl=zh-cn">指数退避算法</a></p>
+</div></div></div></article></div></main><footer class="flex flex-col items-center justify-center leading-8 text-sm w-full py-2 border-t text-skin-muted"><p>Designed &amp; developed by<a class="ml-1 text-yellow" target="_blank" href="https://github.com/mrrs878" rel="noreferrer">Mr.RS</a></p><p>©<!-- --> <!-- -->2022</p></footer></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"post":{"title":"检测自定义字体是否加载","tags":["web-font","反爬虫","安全"],"categories":"反爬虫","description":"我们可以通过加载自定义字体来实现字体反爬虫，那么如何检测字体是否正常加载呢？\n\n有几个维度的检测：\n\n1. 检测字体是否加载成功\n\n2. 检测内容是否正常渲染\n\n## 检测字体是否加载\n\n最简单的方法是使用浏览器提供的[FontFaceSet API](https://developer.mozilla.org/zh-CN/docs/Web/API/FontFaceSet)来检测，其中要用到的","createDate":"2022-04-18 20:52:22","updateDate":"2022-04-18 21:32:33","body":"\u003cp\u003e我们可以通过加载自定义字体来实现字体反爬虫，那么如何检测字体是否正常加载呢？\u003c/p\u003e\n\u003cp\u003e有几个维度的检测：\u003c/p\u003e\n\u003col\u003e\n\u003cli\u003e\u003cp\u003e检测字体是否加载成功\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\u003cp\u003e检测内容是否正常渲染\u003c/p\u003e\n\u003c/li\u003e\n\u003c/ol\u003e\n\u003ch2 id=\"检测字体是否加载\"\u003e检测字体是否加载\u003c/h2\u003e\n\u003cp\u003e最简单的方法是使用浏览器提供的\u003ca href=\"https://developer.mozilla.org/zh-CN/docs/Web/API/FontFaceSet\"\u003eFontFaceSet API\u003c/a\u003e来检测，其中要用到的是\u003ca href=\"https://developer.mozilla.org/zh-CN/docs/Web/API/FontFaceSet/check\"\u003eFontFaceSet.check()\u003c/a\u003e\u003c/p\u003e\n\u003cblockquote\u003e\n\u003cp\u003eFontFaceSet 的check()方法会返回是否在给定的字体列表中的所有字体已经被加载并可用。--MDN\u003c/p\u003e\n\u003c/blockquote\u003e\n\u003cp\u003e示例：\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-js\"\u003e\u003cspan class=\"hljs-variable language_\"\u003edocument\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003efonts\u003c/span\u003e.\u003cspan class=\"hljs-title function_\"\u003echeck\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\u0026quot;12px courier\u0026quot;\u003c/span\u003e);\n\n\u003cspan class=\"hljs-variable language_\"\u003edocument\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003efonts\u003c/span\u003e.\u003cspan class=\"hljs-title function_\"\u003echeck\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\u0026quot;12px MyFont\u0026quot;\u003c/span\u003e，\u003cspan class=\"hljs-string\"\u003e\u0026quot;ß\u0026quot;\u003c/span\u003e); \u003cspan class=\"hljs-comment\"\u003e// 如果字体“MyFont”具有ß字符，则返回true。\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e但这个检测较为简陋，无法检测字体错误的情况（字体正常加载，但不是我们想要的，页面上显示乱码）\u003c/p\u003e\n\u003ch2 id=\"检测内容是否正常渲染\"\u003e检测内容是否正常渲染\u003c/h2\u003e\n\u003cp\u003e针对这种情况，我们可以使用一些比较骚的操作：\u003c/p\u003e\n\u003col\u003e\n\u003cli\u003e\u003cp\u003e创建一个span标签\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\u003cp\u003e给标签添加特定字符\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\u003cp\u003e重置字体样式\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\u003cp\u003e分别测量在添\u003ccode\u003efont-family\u003c/code\u003e前后标签大小\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\u003cp\u003e大小一致 ? 字体加载失败 : 字体加载成功\u003c/p\u003e\n\u003c/li\u003e\n\u003c/ol\u003e\n\u003cp\u003e（这里要创建\u003ccode\u003espan\u003c/code\u003e标签，如果是\u003ccode\u003ediv\u003c/code\u003e的话宽度默认占满，无法测量真实的大小）\u003c/p\u003e\n\u003cp\u003e使用代码表示就是：\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-js\"\u003e\u003cspan class=\"hljs-comment\"\u003e/**\n * 检测字体是否正常渲染\n * \u003cspan class=\"hljs-doctag\"\u003e@param\u003c/span\u003e {\u003cspan class=\"hljs-type\"\u003estring\u003c/span\u003e} font 字体名称\n * \u003cspan class=\"hljs-doctag\"\u003e@param\u003c/span\u003e {\u003cspan class=\"hljs-type\"\u003eArray\u0026lt;string\u0026gt;\u003c/span\u003e} phrase 待匹配的字符\n * \u003cspan class=\"hljs-doctag\"\u003e@return\u003c/span\u003e {\u003cspan class=\"hljs-type\"\u003eboolean\u003c/span\u003e} 是否存在该字体\n */\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eexport\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003efunction\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003echeckFont\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003efont, phrase\u003c/span\u003e) {\n\n  \u003cspan class=\"hljs-comment\"\u003e/**\n   * 可以使用上述的 FontFaceSet API 作简要的判断，如果字体都不存在，那么肯定渲染失败\n   */\u003c/span\u003e\n  \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e (\u003cspan class=\"hljs-variable language_\"\u003edocument\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003efonts\u003c/span\u003e) {\n    \u003cspan class=\"hljs-keyword\"\u003econst\u003c/span\u003e fonts = [...\u003cspan class=\"hljs-variable language_\"\u003edocument\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003efonts\u003c/span\u003e];\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e (fonts.\u003cspan class=\"hljs-title function_\"\u003efindIndex\u003c/span\u003e(\u003cspan class=\"hljs-function\"\u003e(\u003cspan class=\"hljs-params\"\u003ef\u003c/span\u003e) =\u0026gt;\u003c/span\u003e f.\u003cspan class=\"hljs-property\"\u003efamily\u003c/span\u003e === font) === -\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e) {\n      \u003cspan class=\"hljs-variable language_\"\u003econsole\u003c/span\u003e.\u003cspan class=\"hljs-title function_\"\u003elog\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\u0026#x27;font dose not exist\u0026#x27;\u003c/span\u003e);\n      \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003efalse\u003c/span\u003e;\n    }\n  }\n\n  \u003cspan class=\"hljs-comment\"\u003e// 创建一个空的 span 标签来填充内容\u003c/span\u003e\n  \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e node = \u003cspan class=\"hljs-variable language_\"\u003edocument\u003c/span\u003e.\u003cspan class=\"hljs-title function_\"\u003ecreateElement\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\u0026quot;span\u0026quot;\u003c/span\u003e);\n\n  \u003cspan class=\"hljs-comment\"\u003e// 因为可以同时检测多个字符，因此需要存储一下各个字符的大小\u003c/span\u003e\n  \u003cspan class=\"hljs-keyword\"\u003econst\u003c/span\u003e sizes = [];\n\n  \u003cspan class=\"hljs-comment\"\u003e/**\n   * 计算单个字符的尺寸\n   * \u003cspan class=\"hljs-doctag\"\u003e@param\u003c/span\u003e {\u003cspan class=\"hljs-type\"\u003estring\u003c/span\u003e} char 待计算的字符\n   */\u003c/span\u003e\n  \u003cspan class=\"hljs-keyword\"\u003efunction\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003echeckChar\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003echar\u003c/span\u003e) {\n    \u003cspan class=\"hljs-comment\"\u003e// 重置字体\u003c/span\u003e\n    node.\u003cspan class=\"hljs-property\"\u003estyle\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003efontFamily\u003c/span\u003e = \u003cspan class=\"hljs-string\"\u003e\u0026quot;sans-serif\u0026quot;\u003c/span\u003e;\n    \n    \u003cspan class=\"hljs-comment\"\u003e// 填充内容\u003c/span\u003e\n    node.\u003cspan class=\"hljs-property\"\u003einnerHTML\u003c/span\u003e = char;\n\n    \u003cspan class=\"hljs-keyword\"\u003econst\u003c/span\u003e size = {};\n\n    \u003cspan class=\"hljs-comment\"\u003e// 先保存未设置字体时的尺寸\u003c/span\u003e\n    size.\u003cspan class=\"hljs-property\"\u003ewithoutFont\u003c/span\u003e = {\n      \u003cspan class=\"hljs-attr\"\u003ewidth\u003c/span\u003e: node.\u003cspan class=\"hljs-property\"\u003eoffsetWidth\u003c/span\u003e,\n      \u003cspan class=\"hljs-attr\"\u003eheight\u003c/span\u003e: node.\u003cspan class=\"hljs-property\"\u003eoffsetHeight\u003c/span\u003e,\n    };\n\n    \u003cspan class=\"hljs-comment\"\u003e// 设置待检测的字体\u003c/span\u003e\n    node.\u003cspan class=\"hljs-property\"\u003estyle\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003efontFamily\u003c/span\u003e = font + \u003cspan class=\"hljs-string\"\u003e\u0026quot;, sans-serif\u0026quot;\u003c/span\u003e;\n\n    \u003cspan class=\"hljs-comment\"\u003e// 保存设置字体后的尺寸\u003c/span\u003e\n    size.\u003cspan class=\"hljs-property\"\u003ewithFont\u003c/span\u003e = {\n      \u003cspan class=\"hljs-attr\"\u003ewidth\u003c/span\u003e: node.\u003cspan class=\"hljs-property\"\u003eoffsetWidth\u003c/span\u003e,\n      \u003cspan class=\"hljs-attr\"\u003eheight\u003c/span\u003e: node.\u003cspan class=\"hljs-property\"\u003eoffsetHeight\u003c/span\u003e,\n    };\n\n    \u003cspan class=\"hljs-comment\"\u003e// 保存该字符设置字体/未设置字体时的尺寸，待字符计算完毕后统一计算\u003c/span\u003e\n    sizes.\u003cspan class=\"hljs-title function_\"\u003epush\u003c/span\u003e(size);\n  }\n\n  \u003cspan class=\"hljs-comment\"\u003e// 隐藏该 span 标签\u003c/span\u003e\n  node.\u003cspan class=\"hljs-property\"\u003estyle\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003eposition\u003c/span\u003e = \u003cspan class=\"hljs-string\"\u003e\u0026quot;absolute\u0026quot;\u003c/span\u003e;\n  node.\u003cspan class=\"hljs-property\"\u003estyle\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003eleft\u003c/span\u003e = \u003cspan class=\"hljs-string\"\u003e\u0026quot;-10000px\u0026quot;\u003c/span\u003e;\n  node.\u003cspan class=\"hljs-property\"\u003estyle\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003etop\u003c/span\u003e = \u003cspan class=\"hljs-string\"\u003e\u0026quot;-10000px\u0026quot;\u003c/span\u003e;\n\n  \u003cspan class=\"hljs-comment\"\u003e// 字体大小设置大些误差小（offsetWidth和offsetHeight会四舍五入）\u003c/span\u003e\n  node.\u003cspan class=\"hljs-property\"\u003estyle\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003efontSize\u003c/span\u003e = \u003cspan class=\"hljs-string\"\u003e\u0026quot;300px\u0026quot;\u003c/span\u003e;\n\n  \u003cspan class=\"hljs-comment\"\u003e// 重置字体样式\u003c/span\u003e\n  node.\u003cspan class=\"hljs-property\"\u003estyle\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003efontFamily\u003c/span\u003e = \u003cspan class=\"hljs-string\"\u003e\u0026quot;sans-serif\u0026quot;\u003c/span\u003e;\n  node.\u003cspan class=\"hljs-property\"\u003estyle\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003efontVariant\u003c/span\u003e = \u003cspan class=\"hljs-string\"\u003e\u0026quot;normal\u0026quot;\u003c/span\u003e;\n  node.\u003cspan class=\"hljs-property\"\u003estyle\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003efontStyle\u003c/span\u003e = \u003cspan class=\"hljs-string\"\u003e\u0026quot;normal\u0026quot;\u003c/span\u003e;\n  node.\u003cspan class=\"hljs-property\"\u003estyle\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003efontWeight\u003c/span\u003e = \u003cspan class=\"hljs-string\"\u003e\u0026quot;normal\u0026quot;\u003c/span\u003e;\n  node.\u003cspan class=\"hljs-property\"\u003estyle\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003eletterSpacing\u003c/span\u003e = \u003cspan class=\"hljs-string\"\u003e\u0026quot;0\u0026quot;\u003c/span\u003e;\n\n  \u003cspan class=\"hljs-comment\"\u003e// 插入页面中才会有 offsetWidth 和 offsetHeight\u003c/span\u003e\n  \u003cspan class=\"hljs-variable language_\"\u003edocument\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003ebody\u003c/span\u003e.\u003cspan class=\"hljs-title function_\"\u003eappendChild\u003c/span\u003e(node);\n\n  \u003cspan class=\"hljs-comment\"\u003e// 计算每一个字符的尺寸\u003c/span\u003e\n  phrase.\u003cspan class=\"hljs-title function_\"\u003eforEach\u003c/span\u003e(checkChar);\n\n  \u003cspan class=\"hljs-comment\"\u003e/**\n   * 1. 当 offsetWidth 和 offsetHeight 均不相同时说明字体存在\n   * 2. 有一个字符的尺寸相同就说明字体有误\n   */\u003c/span\u003e\n  \u003cspan class=\"hljs-keyword\"\u003econst\u003c/span\u003e res =\n    node \u0026amp;\u0026amp;\n    sizes.\u003cspan class=\"hljs-title function_\"\u003ereduce\u003c/span\u003e(\n      \u003cspan class=\"hljs-function\"\u003e(\u003cspan class=\"hljs-params\"\u003eacc, cur\u003c/span\u003e) =\u0026gt;\u003c/span\u003e\n        acc \u0026amp;\u0026amp;\n        (cur.\u003cspan class=\"hljs-property\"\u003ewithFont\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003ewidth\u003c/span\u003e !== cur.\u003cspan class=\"hljs-property\"\u003ewithoutFont\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003ewidth\u003c/span\u003e ||\n          cur.\u003cspan class=\"hljs-property\"\u003ewithFont\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003eheight\u003c/span\u003e !== cur.\u003cspan class=\"hljs-property\"\u003ewithoutFont\u003c/span\u003e.\u003cspan class=\"hljs-property\"\u003eheight\u003c/span\u003e),\n      \u003cspan class=\"hljs-literal\"\u003etrue\u003c/span\u003e\n    );\n\n  \u003cspan class=\"hljs-comment\"\u003e// 做一些善后工作\u003c/span\u003e\n  node.\u003cspan class=\"hljs-property\"\u003eparentNode\u003c/span\u003e.\u003cspan class=\"hljs-title function_\"\u003eremoveChild\u003c/span\u003e(node);\n  node = \u003cspan class=\"hljs-literal\"\u003enull\u003c/span\u003e;\n\n  \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e res;\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2 id=\"指数退避算法检测内容是否正常渲染\"\u003e指数退避算法检测内容是否正常渲染\u003c/h2\u003e\n\u003cp\u003e由于网络字体的加载需要时间，我们可通过简单地设置一个延时调用上述的\u003ccode\u003echeckFont\u003c/code\u003e，但可能有更好的方式来实现：\u003ca href=\"https://cloud.google.com/memorystore/docs/redis/exponential-backoff?hl=zh-cn\"\u003e指数退避算法\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003e（自己理解）简单来讲就是在不超过所设置的时间范围内，以指数级超市时间定期重试\u003c/p\u003e\n\u003cp\u003e示例：\u003c/p\u003e\n\u003col\u003e\n\u003cli\u003e\u003cp\u003e向服务端发送请求\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\u003cp\u003e失败？等待1秒后重试\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\u003cp\u003e失败？等待2秒后重试\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\u003cp\u003e失败？等待4秒后重试\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\u003cp\u003e失败？等待8秒后重试\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\u003cp\u003e以此类推，直到达到超时时间\u003c/p\u003e\n\u003c/li\u003e\n\u003c/ol\u003e\n\u003cp\u003e在检测字体是否正常加载时，我们也可以使用该算法来更好地检测\u003c/p\u003e\n\u003cp\u003e（也可使用\u003ca href=\"https://developer.mozilla.org/en-US/docs/Web/API/FontFaceSet/loadingdone_event\"\u003eFontFaceSet: loadingdone event\u003c/a\u003e来作为时间点检测）\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-js\"\u003e\u003cspan class=\"hljs-keyword\"\u003econst\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003echeck\u003c/span\u003e = (\u003cspan class=\"hljs-params\"\u003ephrase, options = { timeout: \u003cspan class=\"hljs-number\"\u003e8192\u003c/span\u003e }\u003c/span\u003e) =\u0026gt; {\n  \u003cspan class=\"hljs-keyword\"\u003efunction\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003edoCheck\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003et\u003c/span\u003e) {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e tid = \u003cspan class=\"hljs-built_in\"\u003esetTimeout\u003c/span\u003e(\u003cspan class=\"hljs-function\"\u003e() =\u0026gt;\u003c/span\u003e {\n      \u003cspan class=\"hljs-built_in\"\u003eclearTimeout\u003c/span\u003e(tid);\n      tid = \u003cspan class=\"hljs-literal\"\u003enull\u003c/span\u003e;\n      \u003cspan class=\"hljs-keyword\"\u003econst\u003c/span\u003e res = \u003cspan class=\"hljs-title function_\"\u003echeckFont\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\u0026quot;m-font\u0026quot;\u003c/span\u003e, phrase);\n      \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e (res) {\n        \u003cspan class=\"hljs-comment\"\u003e// success!\u003c/span\u003e\n      }\n      \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e (!res \u0026amp;\u0026amp; (t \u0026lt;\u0026lt; \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e \u0026lt; options.\u003cspan class=\"hljs-property\"\u003etimeout\u003c/span\u003e)) {\n        \u003cspan class=\"hljs-title function_\"\u003edoCheck\u003c/span\u003e(t \u0026lt;\u0026lt; \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e);\n      }\n      \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e (!res \u0026amp;\u0026amp; (t \u0026lt;\u0026lt; \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e) \u0026gt;= options.\u003cspan class=\"hljs-property\"\u003etimeout\u003c/span\u003e) {\n        \u003cspan class=\"hljs-comment\"\u003e// parse error!\u003c/span\u003e\n      }\n    }, t);\n  }\n\n  \u003cspan class=\"hljs-comment\"\u003e// 我们可以以64ms为起始时间点\u003c/span\u003e\n  \u003cspan class=\"hljs-title function_\"\u003edoCheck\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e \u0026lt;\u0026lt; \u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e);\n};\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2 id=\"总结\"\u003e总结\u003c/h2\u003e\n\u003col\u003e\n\u003cli\u003e\u003cp\u003e可使用\u003ca href=\"https://developer.mozilla.org/zh-CN/docs/Web/API/FontFaceSet\"\u003eFontFaceSet API\u003c/a\u003e来做简单的字体是否加载判断，但无法检测字体是否正常渲染\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\u003cp\u003e不同字体下，大概率各个字符的大小是不一样的，可依次来检测字体是否正常渲染\u003c/p\u003e\n\u003c/li\u003e\n\u003c/ol\u003e\n\u003cp\u003e结束！\u003c/p\u003e\n\u003ch2 id=\"参考\"\u003e参考\u003c/h2\u003e\n\u003cp\u003e\u003ca href=\"https://developer.mozilla.org/zh-CN/docs/Web/API/FontFaceSet\"\u003eFontFaceSet API\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003e\u003ca href=\"https://stackoverflow.com/questions/65095157/how-can-i-detect-when-a-font-is-downloaded-via-csss-unicode-range-descriptor\"\u003eHow can I detect when a font is downloaded via CSS\u0026#39;s \u0026quot;unicode-range\u0026quot; descriptor? \u003c/a\u003e\u003c/p\u003e\n\u003cp\u003e\u003ca href=\"https://cloud.google.com/memorystore/docs/redis/exponential-backoff?hl=zh-cn\"\u003e指数退避算法\u003c/a\u003e\u003c/p\u003e\n"}},"__N_SSG":true},"page":"/post/[title]","query":{"title":"检测自定义字体是否加载"},"buildId":"VEO_ERUabz6t4SXdQFN9R","assetPrefix":"/next-blog","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>
