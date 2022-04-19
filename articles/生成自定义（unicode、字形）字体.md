@@ -7,12 +7,21 @@ createDate: "2022-01-08 09:38:17"
 updateDate: "2022-01-08 18:05:37"
 ---
 
+要想实现字体反爬虫，首先要有字体，那么如何制作字体呢
 
-原理(流程)：基于[opentype.js](https://opentype.js.org/)从源字体中提取出特定的字符，按照一定的规则对字符的字形做出变换，输出一套新的字体
+## 原理
+
+一套字体是由多个字符组成，每个字符都有对应的字形，字形是由一系列`command`（类似svg）
+
+![制作字体](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d1b9fa3afe7d47dca17108785cc87800~tplv-k3u1fbpfcp-zoom-1.image)
+
+我们要做的就是基于源字体，提取出特定的字符，调整该字符对应的字形（调整`command`的参数），最后导出一套新的字体
 
 变换规则：根据`strength`和`distance`调整`glyph.path.command`的坐标点
 
 基于[opentype.js](https://opentype.js.org)
+
+## 代码实现
 
 ``` js
 import opentype from 'opentype.js'; 
@@ -86,7 +95,7 @@ function generateFont(sourceFontPath, words, newFontPath, snapConfig) {
     const subGlyphs = sourceFont.stringToGlyphs(words).map((glyph, index) => {
         const word = words[index];
         // 针对反爬虫需求，每个字符需要生成新的unicode
-        const unicode = chance.integer({ min: 255, max: 65536 });
+        const unicode = chance.integer({ min: 255, max: 65535 });
         const { consistent, isSnap, snapPathCmdCnt } = snapConfig;
         let path = glyph.path;
         
@@ -146,3 +155,38 @@ function saveRule(rule) {
 
 export { generateFont, saveRule };
 ```
+
+## 注意点
+
+有一些需要注意的地方
+
+### unicode值
+
+一些资料中表述：在采用NCR时，数字取值为8192-8303（十六进制为`2000`-`206F`），但实测255-65535均可以使用
+
+### 无法复用旧的Glyph
+
+在上述代码中
+
+``` js
+// ...
+return new opentype.Glyph({
+    index: index + 1,
+    unicode,
+    name: word,
+    path,
+    advanceWidth: glyph.advanceWidth,
+});
+// ...
+```
+
+需要新生成一个`Glyph`，只能复用老的`Glyph`的一些参数
+
+## 总结
+
+字体都是由一个个字符组成，每个字符都有自己对应的字形参数。我们可以基于源字体，提取出特定的字符，调整该字符对应的字形，最后生成一套新的字体
+
+## 参考
+
+[opentype](https://opentype.js.org/)
+
