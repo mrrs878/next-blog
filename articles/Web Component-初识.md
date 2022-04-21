@@ -19,13 +19,13 @@ Web Component 有点东西
 
 - Shadow DOM（影子 DOM）。可以用来做样式隔离
 
-- HTML templates（HTML 模板）。可以实现组件拓展
+- HTML templates（HTML 模板）。可以用来定义一个基础的组件的dom结构
 
 ## 怎么用 Web Component
 
 实现 Web Component 的**最基本**流程：
 
-1. 使用`template`来定义一个*组件*
+1. 使用`template`来定义一个*组件*的dom
 
 ```html
 <template id="mHeader">
@@ -35,7 +35,7 @@ Web Component 有点东西
 </template>
 ```
 
-2. 接着创建一个*类组件*
+2. 接着基于👆创建的`template`创建一个*类组件*
 
 ```jsx
 class MHeader extends HTMLElement {
@@ -44,14 +44,11 @@ class MHeader extends HTMLElement {
     // attachShadow() 方法来将一个 shadow root 附加到任何一个元素上，该方法返回一个 shadow root 。
     const shadowRoot = this.attachShadow({ mode: "closed" });
     const template = document.querySelector("#mHeader");
-    // 复制出一个新的节点
     const content = template.content.cloneNode(true);
     shadowRoot.appendChild(content);
   }
 }
 ```
-
-[Node.cloneNode(deep)](https://developer.mozilla.org/zh-CN/docs/Web/API/Node/cloneNode) 方法返回调用该方法的节点的一个副本，参数`deep`表示是否复制子节点，默认值为`false`
 
 3. [CustomElementRegistry.define()](https://developer.mozilla.org/zh-CN/docs/Web/API/CustomElementRegistry/define) 方法注册自定义标签（元素）
 
@@ -74,9 +71,9 @@ window.customElements.define("m-header", MHeader);
 
 5. 给组件加点样式
 
-可以直接在`template`里添加`style`标签
+可以直接在`template`里添加`style`标签，在里面可以添加只在该`template`下生效的样式
 
-`:host选`择器可以选择组件的根元素
+`:host`选择器可以选择组件的根元素
 
 ```html
 <template id="mHeader">
@@ -203,18 +200,24 @@ class MHeader extends HTMLElement {
 </html>
 ```
 
-## 未完待续
+未完待续
 
 to be continued...
 
+## 基于 Web Component 的落地应用
+
+GitHub。GitHub是基于 Web Components 来开发的
+
+![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6309ad13b5b24d23aaf42e426923d4c4~tplv-k3u1fbpfcp-watermark.image?)
+
+其次，Vue.js和微信小程序也是基于 Web Components 来做组件化的
+
 ## 总结
 
-Web Component 是浏览器提供的可以用于组件复用的方案，可以实现样式隔离，自定义属性、父子组件通信等功能，但书写起来有些不够便捷，需要用到原生 dom 操作 api
+Web Component 是浏览器提供的可以用于组件复用的方案，可以实现样式隔离，自定义属性、父子组件通信等功能，有不少应用/框架都是基于Web Component来进行开发的，前景广阔。但Web Component书写起来还是有些不够便捷，需要用到原生 dom 操作 api
 
 ## 参考
 
 [MDN-Web Components](https://developer.mozilla.org/zh-CN/docs/Web/Web_Components)
 
 [MDN/web-components-examples](https://github.com/mdn/web-components-examples)
-
-[Node.cloneNode(deep)](https://developer.mozilla.org/zh-CN/docs/Web/API/Node/cloneNode)
