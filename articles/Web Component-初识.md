@@ -44,11 +44,14 @@ class MHeader extends HTMLElement {
     // attachShadow() 方法来将一个 shadow root 附加到任何一个元素上，该方法返回一个 shadow root 。
     const shadowRoot = this.attachShadow({ mode: "closed" });
     const template = document.querySelector("#mHeader");
+    // 复制出一个新的节点
     const content = template.content.cloneNode(true);
     shadowRoot.appendChild(content);
   }
 }
 ```
+
+[Node.cloneNode(deep)](https://developer.mozilla.org/zh-CN/docs/Web/API/Node/cloneNode) 方法返回调用该方法的节点的一个副本，参数`deep`表示是否复制子节点，默认值为`false`
 
 3. [CustomElementRegistry.define()](https://developer.mozilla.org/zh-CN/docs/Web/API/CustomElementRegistry/define) 方法注册自定义标签（元素）
 
@@ -213,3 +216,5 @@ Web Component 是浏览器提供的可以用于组件复用的方案，可以实
 [MDN-Web Components](https://developer.mozilla.org/zh-CN/docs/Web/Web_Components)
 
 [MDN/web-components-examples](https://github.com/mdn/web-components-examples)
+
+[Node.cloneNode(deep)](https://developer.mozilla.org/zh-CN/docs/Web/API/Node/cloneNode)
