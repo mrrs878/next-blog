@@ -1,6 +1,6 @@
 ---
 title: "Web Component-Lit"
-tags: "微前端 WebComponent Attribute Property"
+tags: "微前端 WebComponent Lit"
 categories: "微前端"
 description: ""
 createDate: "2022-04-26 20:49:40"
