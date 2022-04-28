@@ -7,11 +7,6 @@ createDate: "2022-04-27 22:25:56"
 updateDate: "2022-04-27 22:54:37"
 ---
 
----
-theme: channing-cyan
-highlight: a11y-light
----
-
 一起养成写作习惯！这是我参与「掘金日新计划 · 4 月更文挑战」的第11天，[点击查看活动详情](https://juejin.cn/post/7080800226365145118)
 
 在昨天，我们使用 Lit 重构了`Reply`组件
