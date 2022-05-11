@@ -2,7 +2,7 @@
  * @Author: mrrs878@foxmail.com
  * @Date: 2022-01-22 15:59:54
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-01-23 18:00:56
+ * @LastEditTime: 2022-05-11 23:10:31
  */
 
 import { flatten, groupWith } from 'ramda';
@@ -34,7 +34,7 @@ export const getStaticProps = async () => {
   years = Array.from(new Set(years));
   const posts = groupWith((a, b) => a.year === b.year, articles);
   posts.forEach((item, index) => item.unshift({
-    createDate: years[index], title: '', year: '',
+    createDate: years[index] || null, title: '', year: '',
   }));
   return {
     props: { posts: flatten(posts), years },
@@ -53,7 +53,7 @@ const Timeline: FC<ITimelineProps> = ({
     {
       posts.map((post) => (
         <div
-          key={`${post.createDate} ${post.title}`}
+          key={`${post?.createDate} ${post.title}`}
           className={`mb-8 pb-2 border-dashed border-b hover:text-yellow hover:cursor-pointer ${post.title === '' ? 'text-2xl' : ''}`}
         >
           <Link href={post.title === '' ? `/?createDate=${post.createDate}` : `/post/${post.title}`}>
