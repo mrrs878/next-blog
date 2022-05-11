@@ -2,7 +2,7 @@
  * @Author: mrrs878@foxmail.com
  * @Date: 2022-01-18 21:44:10
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-01-21 11:30:45
+ * @LastEditTime: 2022-05-11 22:21:39
  */
 
 import { readdir, readFile } from 'fs/promises';
@@ -49,7 +49,7 @@ export async function getSlugs() {
 }
 
 const sortPosts = (post1: IPost, post2: IPost) => (
-  new Date(post2.createDate).getTime() - new Date(post1.createDate).getTime()
+  new Date(post2.updateDate).getTime() - new Date(post1.updateDate).getTime()
 );
 
 export async function getPosts() {
