@@ -1,10 +1,10 @@
 ---
-title: "React.js-useEffect vs useLayoutEffect"
-tags: "React.js useEffect useLayoutEffect"
+title: "React.js学习-useEffect vs useLayoutEffect"
+tags: "React.js学习 useEffect useLayoutEffect"
 categories: "React.js"
 description: ""
 createDate: "2022-05-10 21:49:31"
-updateDate: "2022-05-10 22:49:31"
+updateDate: "2022-05-16 22:23:14"
 ---
 
 大部分情况下不需要明确区分 `useEffect` 和 `useLayoutEffect`
