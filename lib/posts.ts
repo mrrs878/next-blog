@@ -2,7 +2,7 @@
  * @Author: mrrs878@foxmail.com
  * @Date: 2022-01-18 21:44:10
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-05-11 22:21:39
+ * @LastEditTime: 2022-05-17 21:02:26
  */
 
 import { readdir, readFile } from 'fs/promises';
@@ -48,11 +48,11 @@ export async function getSlugs() {
     .map((file) => file.slice(0, -suffix.length));
 }
 
-const sortPosts = (post1: IPost, post2: IPost) => (
-  new Date(post2.updateDate).getTime() - new Date(post1.updateDate).getTime()
+const sortPostsByCreate = (post1: IPost, post2: IPost) => (
+  new Date(post2.createDate).getTime() - new Date(post1.createDate).getTime()
 );
 
-export async function getPosts() {
+export async function getPosts(sortPosts = sortPostsByCreate) {
   const slugs = await getSlugs();
   const posts = await Promise.all(slugs.map((slug) => getPost(slug)));
   const sortedPosts = posts.sort(sortPosts);

@@ -2,7 +2,7 @@
  * @Author: mrrs878@foxmail.com
  * @Date: 1985-10-26 16:15:00
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-01-23 18:10:33
+ * @LastEditTime: 2022-05-17 21:02:06
 */
 
 import { FC, useMemo, useState } from 'react';
@@ -16,8 +16,12 @@ interface IHomeProps {
   posts: Array<IPost>;
 }
 
+const sortPostsByUpdate = (post1: IPost, post2: IPost) => (
+  new Date(post2.updateDate).getTime() - new Date(post1.updateDate).getTime()
+);
+
 export const getStaticProps = async () => {
-  const posts = await getPosts();
+  const posts = await getPosts(sortPostsByUpdate);
   return {
     props: { posts },
   };
