@@ -7,7 +7,7 @@ createDate: "2022-05-19 21:41:41"
 updateDate: "2022-05-19 23:07:41"
 ---
 
-`useContext`在 React 中主要作为`useState`的替代品，用于在复杂组件间传递数据，但错误地使用也会导致一些性能问题
+`useContext`在 React 中主要作为`useState`的替代品，用于在复杂组件间传递数据，但需要稍加注意一些组件重复渲染问题
 
 先说结论：由于`Context`的限制，每当`Context`中的数据发生变化时，通过`useContext`使用该`Context`的组件及其子组件都会触发重渲。对此，可通过拆分`Context`，减少`Context`的作用域，减少重渲的范围
 
@@ -141,6 +141,10 @@ updateDate: "2022-05-19 23:07:41"
 </html>
 ```
 
+组件结构是这样的
+
+![组件结构](/img/use-context-o-0.png)
+
 代码跑起来后页面显示正常，操作后数据也正常更新，但当我们打开控制台后，会发现打印的数据有点不正常
 
 刷新页面，初次渲染时打印数据是正常的
@@ -219,3 +223,24 @@ const Store = ({ children }) => {
 ```
 
 在这里，`DispatchContext`的`value`必须使用`useMemo`缓存一下：`value`是一个对象，触发`state`更新后`Store`组件会重渲，如果不缓存，`value`也会改变，导致使用到`DispatchContext`的组件也会重渲，拆分了个寂寞。。。因此拆分后一定要记得打印一下日志，看有没有效果
+
+此时的组件结构是这样的
+
+![优化后的useContext](/img/use-context-o-1.png)
+
+经过此番优化后，日志打印正常了
+
+```sh
+rerender Header
+rerender Headerer
+rerender Counter
+rerender Counterer
+# <------点击按钮------->
+rerender Header
+```
+
+## 总结
+
+1. 对于未直接使用到`Context`的，可通过`memo`等手段优化，避免不必要的重渲
+
+2. 对于直接使用到`Context`的，可通过拆分`Context`优化

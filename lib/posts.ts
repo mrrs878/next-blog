@@ -2,7 +2,7 @@
  * @Author: mrrs878@foxmail.com
  * @Date: 2022-01-18 21:44:10
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-05-17 21:02:26
+ * @LastEditTime: 2022-05-20 10:29:29
  */
 
 import { readdir, readFile } from 'fs/promises';
@@ -24,6 +24,18 @@ marked.setOptions({
   smartLists: true,
   smartypants: false,
   xhtml: false,
+});
+
+marked.use({
+  renderer: {
+    heading: (text, level) => (`
+      <h${level}>
+        <span class="prefix"></span>
+        <span class="content">${text}</span>
+        <span class="suffix"></span>
+      </h${level}>
+    `),
+  },
 });
 
 export async function getPost(slug: string) {
