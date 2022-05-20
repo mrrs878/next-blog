@@ -231,6 +231,12 @@
 }
 
 /* 代码块主题 */
+pre {
+  /* position: relative; */
+  /* border-radius: 5px; */
+  max-height: 800px;
+  overflow: auto;
+}
 pre code {
   border-radius: 5px;
   display: block;
@@ -238,11 +244,12 @@ pre code {
   background: #282c34 !important;
   color: #f8f8f2;
   padding: .5em;
+  overflow: hidden;
 }
 pre::before {
   content: '';
   display: block;
-  background: url(/point.png);
+  background: url(/img/point.png);
   height: 30px;
   width: 100%;
   background-size: 40px;
@@ -251,6 +258,8 @@ pre::before {
   margin-bottom: -7px;
   border-radius: 5px;
   background-position: 10px 10px;
+  position: sticky;
+  top: 0;
 }
 
 /* 加粗 */
@@ -270,4 +279,13 @@ pre::before {
 code {
   font-size: 1em;
   font-family: "SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace !important;
+}
+
+#write ol {
+  counter-reset: section;
+}
+
+#write ol li p::before {
+  counter-increment: section;
+  content: counter(section) ". ";
 }
