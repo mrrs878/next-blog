@@ -4,7 +4,7 @@ tags: "webpack HMR"
 categories: "webpack"
 description: ""
 createDate: "2022-02-09 20:41:29"
-updateDate: "2022-05-20 19:38:52"
+updateDate: "2022-05-25 09:38:52"
 ---
 
 ## WHAT
@@ -90,7 +90,7 @@ self["webpackHotUpdate"](0, {
 
 其下为更具体更完整的流程，每一步都涉及众多，有兴趣的可阅读`webpack-dev-server`及开发环境`webpack`运行时的源码。
 
-1. `webpack-dev-server`将打包输出`bundle`使用内存型文件系统控制，而非真实的文件系统。此时使用的是[memfs](https://github.com/streamich/memfs)模拟 node.js fs API
+1. `webpack-dev-server`将打包输出`bundle`使用内存型文件系统控制，而非真实的文件系统。此时使用的是[memory-fs](https://github.com/webpack/memory-fs)模拟 node.js fs API
 
 2. 每当文件发生变更时，`webpack`将会重新编译，`webpack-dev-server`将会监控到此时文件变更事件，并找到其对应的`module`。此时使用的是[chokidar](https://github.com/paulmillr/chokidar)监控文件变更
 
