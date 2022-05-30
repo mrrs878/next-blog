@@ -3,7 +3,3 @@
 @tailwind utilities;
 @import url(./a11y-dark.css);
 @import url(./orange.css);
-
-li {
-  list-style: none;
-}

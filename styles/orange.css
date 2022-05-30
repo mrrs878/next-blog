@@ -280,12 +280,3 @@ code {
   font-size: 1em;
   font-family: "SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace !important;
 }
-
-#write ol {
-  counter-reset: section;
-}
-
-#write ol li p::before {
-  counter-increment: section;
-  content: counter(section) ". ";
-}
