@@ -55,6 +55,8 @@ updateDate: "2022-05-30 21:38:52"
 
 若变量没有被其它模块使用则删除对应的导出语句，并打上标记
 
+![webpack tree-shaking](/img/webpack-tree-shaking-0.png)
+
 ### 删除
 
 将由 Terser、UglifyJS 等 DCE 工具“摇”掉这部分无效代码，构成完整的 Tree Shaking 操作
@@ -68,7 +70,7 @@ updateDate: "2022-05-30 21:38:52"
 2. 在 `FlagDependencyUsagePlugin` 插件中收集模块的导出值的使用情况，并记录到 `exportInfo._usedInRuntime` 集合中
 
 3. 在 `HarmonyExportXXXDependency.Template.apply` 方法中根据导出值的使用情况生成不同的导出语句
-使用 DCE 工具删除 Dead Code，实现完整的树摇效果
+   使用 DCE 工具删除 Dead Code，实现完整的树摇效果
 
 ## 参考
 
