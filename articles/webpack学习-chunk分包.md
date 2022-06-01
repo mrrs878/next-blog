@@ -97,7 +97,7 @@ module.exports = {
 
 此时再次执行 `npx webpack --json > info.json`，打包结果如下
 
-![webpack runtime分包](/public/img//webpack-chunk-4.png)
+![webpack runtime分包](/img/webpack-chunk-4.png)
 
 可以看到，此时又新增了一个包，而且对比一下输出文件的大小，大部分文件输出到 `solid-runtime.js` 中， `index.js` 和 `main.js` 已经缩短到 30 行左右
 
