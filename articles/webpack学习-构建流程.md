@@ -57,6 +57,10 @@ chunk 分包规则：
 
 ## loader 与 plugin
 
+plugin 从代码上看是一个带有 apply 函数的 class 。 webpack 会在特定的时机触发钩子，并会附带上足够的上下文信息，插件定义的钩子回调中，可以与这些上下文背后的数据结构、接口交互产生 side effect，进而影响到编译状态和后续流程
+
+loader 从代码上看是一个函数，接收特定的参数（源代码等），经过转换后返回一个js解释器可以解析的内容
+
 ## 参考
 
 [[万字总结] 一文吃透 Webpack 核心原理](https://mp.weixin.qq.com/s/SbJNbSVzSPSKBe2YStn2Zw)
