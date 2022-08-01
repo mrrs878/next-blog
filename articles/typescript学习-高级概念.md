@@ -4,11 +4,10 @@ tags: "分发 逆变 协变"
 categories: "typescript"
 description: ""
 createDate: "2022-07-29 20:01:35"
-updateDate: "2022-07-31 23:01:35"
+updateDate: "2022-08-01 20:54:30"
 ---
 
 一些typescript中的概念
-
 ## 分发
 
 先上demo
@@ -57,6 +56,27 @@ type MyExclude<T, U> = T extends U ? never : T
 ![分发的应用-Exclude](/img/typescript-high-concept-1.png)
 
 ## 逆变
+
+函数之间互相赋值，参数之间的类型兼容性
+
+首先，思考一下如下场景
+
+``` ts
+let a!: { name: string, age: number }
+let b!: { name: string }
+
+b = a;
+
+a = b;
+```
+
+对于 `a = b` 这一赋值 ts是会报错的
+
+![类型安全性](/img/typescript-high-concept-2.png)
+
+我们都清楚 TS 属于静态类型检测，所谓类型的赋值是要保证安全性的。
+
+**通俗来说也就是多的可以赋值给少的**，上述代码因为 a 的类型定义中完全包括 b 的类型定义，所以 a 类型完全是可以赋值给 b 类型，这被称为类型兼容性。
 
 ## 协变
 
