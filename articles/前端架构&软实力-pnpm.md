@@ -1,15 +1,15 @@
 ---
 title: "前端架构&软实力-pnpm"
-tags: "pnpm"
+tags: "pnpm npm"
 categories: "前端架构&软实力"
 description: ""
 createDate: "2022-08-15 19:11:45"
-updateDate: "2022-08-15 20:11:45"
+updateDate: "2022-08-16 22:11:45"
 ---
 
 [pnpm](https://pnpm.io) 全称是 “Performant NPM”，即高性能的 npm。它结合软硬链接与新的依赖组织方式，大大提升了包管理的效率，也同时解决了 “幽灵依赖” 的问题，让包管理更加规范，降低潜在风险发生的可能性
 
-## 安装
+## 安装&使用
 
 ```bash
 npm i pnpm -g
@@ -17,23 +17,35 @@ npm i pnpm -g
 
 ## pnpm 在管理 package 时的区别
 
-npm2 是通过嵌套的方式管理 `node_modules` 的，会有依赖复制多次的问题。
+npm2(Node.js 0.11.14~4.9.1) 是通过**嵌套**的方式管理 `node_modules` 的
 
-npm3+ 和 yarn 是通过铺平的扁平化的方式来管理 `node_modules` ，解决了嵌套方式的部分问题，但是引入了幽灵依赖的问题，并且同名的包只会提升一个版本的，其余的版本依然会复制多次。
+![npm2-node-modules-structure](/img/npm2-node-modules-structure.png)
 
-pnpm 则是用了另一种方式，不再是复制了，而是都从全局 store 硬连接到 `node_modules/.pnpm` ，然后之间通过软链接来组织依赖关系。
+这样的处理方式层级结构非常明显，可以清楚的知道当前安装的包，但是这样也存在不小的问题：
 
-这样不但节省磁盘空间，也没有幽灵依赖问题，安装速度还快，从机制上来说完胜 npm 和 yarn。
+1. 会有依赖下载多次的问题，无法复用
+
+2. 目录层级太深，路径过长，有些操作系统会报错（在 windows 系统中文件路径不能超过 280 个字符）
+
+![heaviest-objects-in-the-universe](/img/heaviest-objects-in-the-universe.png)
+
+npm3+(Node.js 5.0.0+) 是通过**铺平的扁平化**的方式来管理 `node_modules`
+
+![npm3-node-modules-structure](/img/npm3-node-modules-structure.png)
+
+安装时会遍历所有的节点，逐个将模块放在 node_modules 的第一层，当发现有重复模块时，则丢弃， 如果遇到某些依赖版本不兼容的问题，则继续采用 npm 2 的处理方式，前面的放在 node_modules 目录中，后面的放在依赖树中。该方式解决了 npm2 的部分问题，但也引入了其他的问题
+
+1. **幽灵依赖**
+
+2. 同名的包只会提升一个版本的，其余的版本依然会复制多次，而且该特性严重依赖包的**安装顺序**
 
 ## pnpm 的优势
 
 简单描述一下 pnpm 的优势：
 
-- 快。安装速度快
+- 快。安装速度快。安装过的依赖会被精准缓存并拿来复用，基于内容寻址存储（CAS），包版本升级带来的变化都只 diff，绝不浪费一点空间
 
-- 准。安装过的依赖会被精准缓存并拿来复用，甚至包版本升级带来的变化都只 diff，绝不浪费一点空间，逻辑上也严丝合缝
-
-- 狠。废除幽灵依赖，提升包管理的效率
+- 狠。废除幽灵依赖
 
 pnpm 的 `node_modules` 结构
 
@@ -43,7 +55,7 @@ pnpm 的 `node_modules` 结构
 
 - 每个项目的 `node_modules` 下有 `.pnpm` 目录以平级结构管理每个版本的包的源码内容，以**硬连接**方式指向 pnpm-store 中的文件地址
 
-- 每个项目的 `node_modules` 下安装的包结构为树状，以**软链接**的方式将内容指向 `node_modules/.pnpm` 中的包（类似于npm2）
+- 每个项目的 `node_modules` 下安装的包结构为树状，以**软链接**的方式将内容指向 `node_modules/.pnpm` 中的包（类似于 npm2）
 
 ## 寻址方式
 
@@ -54,7 +66,7 @@ pnpm 的 `node_modules` 结构
 import { something } from "bar";
 ```
 
-针对于 `bar` 这个包，寻址时的路径大概是这样的：
+以 `bar` 这个包为例，寻址时的路径大概是这样的：
 
 `node_modules/bar` ->(软链) `node_modules/.pnpm/bar@1.0.0/node_modules/bar` ->(硬链) `~/.pnpm-store/v3/files/00/xxx`
 
@@ -62,9 +74,11 @@ import { something } from "bar";
 
 有些项目中未安装的包（未在 `package.json` 中声明），但仍然可以在项目里使用
 
-产生的原因：在安装的时候， npm/yarn 会通过铺平的扁平化的方式来管理 `node_modules` ，因此在项目文件中是可以寻址到这个包的
+产生的原因：在安装的时候， npm/yarn 会通过铺平的扁平化的方式来管理 `node_modules` ，因此项目文件中是可以寻址到这个包的
 
 因为 pnpm 特殊的寻址设计，使得第一层可以仅包含 `package.json` 定义的包，使 `node_modules` 不可能寻址到未定义在 `package.json` 中的包，自然就解决了幽灵依赖的问题
+
+![eslint-no-extraneous-dependencies](/img/eslint-no-extraneous-dependencies.png)
 
 ## 硬链接/软链接
 
@@ -118,8 +132,18 @@ ls -li ./t_s.txt ./t.txt
 
 TODO
 
+## 总结
+
+不同于npm/yarn，pnpm 采用了一种全新的包管理方式，不再是复制了，而是都从全局 store **硬连接**到 `node_modules/.pnpm` ，然后之间通过**软链接**来组织依赖关系。这样不但节省磁盘空间，也没有幽灵依赖问题，安装速度还快，从机制上来说完胜 npm 和 yarn。
+
 ## 参考
 
 [253.精读《pnpm》.md](https://github.com/ascoders/weekly/blob/master/%E5%89%8D%E6%B2%BF%E6%8A%80%E6%9C%AF/253.%E7%B2%BE%E8%AF%BB%E3%80%8Apnpm%E3%80%8B.md)
 
-[幽灵依赖](https://zhuanlan.zhihu.com/p/412419619)
+[Phantom dependencies](https://rushjs.io/pages/advanced/phantom_deps/)
+
+[Node.js version](https://nodejs.org/zh-cn/download/releases/)
+
+[npm 依赖管理中被忽略的那些细节](https://www.infoq.cn/article/qj3z2ygrzdgicqauaffn)
+
+[Here’s what you need to know about npm 5](https://blog.pusher.com/what-you-need-know-npm-5/#:~:text=%24%20npm%20install%20npm%20added%20125%2C%20removed%2032%2C,network%20if%20something%20is%20missing%20from%20the%20cache.)
