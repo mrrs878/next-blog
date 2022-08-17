@@ -4,7 +4,7 @@ tags: "pnpm npm"
 categories: "前端架构&软实力"
 description: ""
 createDate: "2022-08-15 19:11:45"
-updateDate: "2022-08-16 22:11:45"
+updateDate: "2022-08-17 20:33:45"
 ---
 
 [pnpm](https://pnpm.io) 全称是 “Performant NPM”，即高性能的 npm。它结合软硬链接与新的依赖组织方式，大大提升了包管理的效率，也同时解决了 “幽灵依赖” 的问题，让包管理更加规范，降低潜在风险发生的可能性
@@ -15,7 +15,7 @@ updateDate: "2022-08-16 22:11:45"
 npm i pnpm -g
 ```
 
-## pnpm 在管理 package 时的区别
+## npm的历史遗留
 
 npm2(Node.js 0.11.14~4.9.1) 是通过**嵌套**的方式管理 `node_modules` 的
 
@@ -47,6 +47,8 @@ npm3+(Node.js 5.0.0+) 是通过**铺平的扁平化**的方式来管理 `node_mo
 
 - 狠。废除幽灵依赖
 
+## 寻址方式
+
 pnpm 的 `node_modules` 结构
 
 ![pnpm-node-modules-structure](/img/pnpm-node-modules-structure.jpeg)
@@ -56,8 +58,6 @@ pnpm 的 `node_modules` 结构
 - 每个项目的 `node_modules` 下有 `.pnpm` 目录以平级结构管理每个版本的包的源码内容，以**硬连接**方式指向 pnpm-store 中的文件地址
 
 - 每个项目的 `node_modules` 下安装的包结构为树状，以**软链接**的方式将内容指向 `node_modules/.pnpm` 中的包（类似于 npm2）
-
-## 寻址方式
 
 针对于使用 `pnpm` 管理的包，寻址一般会经历以下步骤：
 
@@ -128,9 +128,30 @@ ls -li ./t_s.txt ./t.txt
 
 ## pnpm-store
 
-该目录可通过 `pnpm store path` 查看
+全局安装目录，存储所有的包（该目录可通过 `pnpm store path` 查看）
 
-TODO
+这个硬链接目标文件并不是普通的 NPM 包源码，而是一个哈希文件，这种文件组织方式叫做 content-addressable（基于内容的寻址）。简单来说，基于内容的寻址比基于文件名寻址的好处是，即便包版本升级了，也仅需存储改动 Diff，而不需要存储新版本的完整文件内容，在版本管理上进一步节约了存储空间。
+
+pnpm-store 的组织方式大概是这样的：
+
+```
+~/.pnpm-store
+- v3
+  - files
+    - 00
+      - e4e13870602ad2922bfc7..
+      - e99f6ffa679b846dfcbb1..
+      ..
+    - 01
+      ..
+    - ..
+      ..
+    - ff
+      ..
+```
+
+之所以能采用这种存储方式，是因为 NPM 包一经发布内容就不会再改变，因此适合内容寻址这种内容固定的场景，同时内容寻址也忽略了包的结构关系，当一个新包下载下来解压后，遇到相同文件 Hash 值时就可以抛弃，仅存储 Hash 值不存在的文件，这样就自然实现了开头说的，pnpm 对于同一个包不同的版本也仅存储其增量改动的能力。
+
 
 ## 总结
 
