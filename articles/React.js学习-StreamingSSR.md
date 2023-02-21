@@ -47,46 +47,6 @@ app.get("/", async (req, res) => {
 
 这是 React18 之前提供的用于 SSR 的 API ，两个方法都可用于在服务端渲染组件，两者的区别在于 `renderToString` 会将一个组件渲染为 HTML 字符串， 而 `renderToNodeStream` 会将一个组件渲染称为一个 Node.js 可读流，可通过 `res.write` 将数据传递给客户端
 
-一个使用 `renderToNodeStream` 实现的SSR 服务端 demo
-
-```tsx
-import { renderToNodeStream } from "react-dom/server";
-
-const App: FC = () => (
-  <div>
-    {new Array(10).fill(0).map(() => (
-      <Table dataSource={dataSource} columns={columns} />
-    ))}
-  </div>
-);
-
-app.get("/renderToString", (req, res) => {
-  res.setHeader("Content-Type", "text/html");
-  res.setHeader("Transfer-Encoding", "chunked");
-
-  res.write(`
-  <html>
-    <head>
-      <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    </head>
-    <body>
-      <div>First segment</div>
-  `);
-
-  const html = renderToString(<App />);
-
-  res.write(html);
-  res.write("</div></body></html>");
-  res.end();
-});
-```
-
-完整版 demo 看[这里](https://github.com/mrrs878/snippets/blob/7290212d81dd1a290d5930fc55cf6d4c9ecd1797/demos/react-streaming-ssr/index.tsx#L57)
-
-下图是该方式下的请求时间图
-
-![renderToNodeStream timing](/img/streaming-ssr-1.png)
-
 这是一个典型的SSR应用架构。在用户访问页面时，先在服务端使用一些 React 提供的 API 将将组件渲染为 html 发送给客户端，这样客户端能够在 javascript 执行完毕前展示基本的 html 内容，减少白屏等待时间。然后在 javascript 加载完毕后对现有的 html 元素进行事件绑定（注水），注水完毕后才是一个正常的 React 应用
 
 虽然可以实现 SSR ，但存在一些弊端： 
@@ -104,54 +64,6 @@ app.get("/renderToString", (req, res) => {
 ### renderToPipeableStream
 
 虽然 `renderToNodeStream` 相对于 `renderToString` 有一定的性能提升，但还存在一个问题**需要等服务端将整个页面渲染完毕后才会开始传输数据**，复杂情况下，如果某个组件内有耗时的操作，这样就会阻塞 HTML 的生成。对此，React18 提供了一个新的 API `renderToPipeableStream` ，相较于 `renderToNodeStream` 该方法可以分段传输 HTML 到浏览器，这样浏览器就可以更快地启动 HTML 的渲染，提高性能
-
-该 API 的使用方式如下所示
-
-```tsx
-app.get("/renderToPipeableStream", (req, res) => {
-  res.setHeader("Content-Type", "text/html");
-  res.setHeader("Transfer-Encoding", "chunked");
-
-  res.write(`
-  <html>
-    <head>
-      <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    </head>
-    <body>
-      <div>First segment</div>
-  `);
-
-  let didError = false;
-  const stream = renderToPipeableStream(<App />, {
-    bootstrapScripts: ["main.js"],
-    onShellReady() {
-      res.statusCode = didError ? 500 : 200;
-      stream.pipe(res);
-    },
-    onShellError() {
-      res.statusCode = 500;
-      res.send(
-        '<!doctype html><p>Loading...</p><script src="clientrender.js"></script>'
-      );
-    },
-    onAllReady() {
-      // stream.pipe(res);
-    },
-    onError(err) {
-      didError = true;
-      console.error(err);
-    },
-  });
-});
-```
-
-完整版 demo 看[这里](https://github.com/mrrs878/snippets/blob/7290212d81dd1a290d5930fc55cf6d4c9ecd1797/demos/react-streaming-ssr/index.tsx#L101)
-
-下图是该方式下的请求时间图
-
-![renderToNodeStream timing](/img/streaming-ssr-2.png)
-
-可以看出，在使用 `renderToPipeableStream` 后，响应的 TTFB 获得了极大的提升
 
 ## 选择性注水 （Selective Hydration）
 
