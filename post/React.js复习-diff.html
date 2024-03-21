@@ -1,0 +1,73 @@
+<!DOCTYPE html><html><head><link rel="icon" href="https://mrrsblog.oss-cn-shanghai.aliyuncs.com/avatar.jpg"/><script async="" src="/js/L2Dwidget.min.js"></script><script async="" src="/js/initL2D.js"></script><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><title>Mr.RS的个人博客-React.js复习-diff</title><meta name="next-head-count" content="3"/><link rel="preload" href="/_next/static/css/15773988a510c3d3.css" as="style"/><link rel="stylesheet" href="/_next/static/css/15773988a510c3d3.css" data-n-g=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-b927671265afed5e.js" defer=""></script><script src="/_next/static/chunks/framework-91d7f78b5b4003c8.js" defer=""></script><script src="/_next/static/chunks/main-1e7421553b9673ee.js" defer=""></script><script src="/_next/static/chunks/pages/_app-ca6aae25bc99a05f.js" defer=""></script><script src="/_next/static/chunks/899-1cd3a59abdb8ea18.js" defer=""></script><script src="/_next/static/chunks/pages/post/%5Btitle%5D-d89e1712c82a34ac.js" defer=""></script><script src="/_next/static/GZFJR6a1QTyOSF1RGsgpY/_buildManifest.js" defer=""></script><script src="/_next/static/GZFJR6a1QTyOSF1RGsgpY/_ssgManifest.js" defer=""></script><script src="/_next/static/GZFJR6a1QTyOSF1RGsgpY/_middlewareManifest.js" defer=""></script></head><body><div id="__next" data-reactroot=""><header class="fixed top-0 py-4 left-0 right-0 h-auto px-10 shadow bg-white z-50"><nav><ul class="flex w-auto"><li class="mr-4 hover:text-yellow"><a href="/">首页</a></li><li class="mx-4 hover:text-yellow"><a href="/categories">分类</a></li><li class="mx-4 hover:text-yellow"><a href="/tags">标签</a></li><li class="ml-4 hover:text-yellow"><a href="/timeline">归档</a></li></ul></nav></header><main class="mt-20 mb-4 mx-auto justify-center w-2/3"><div class="mx-auto lg:max-w-5xl md:max-w-3xl"><article class="flex flex-col justify-around pb-16 px-4 mx-auto space-y-10 text-base"><div class="flex flex-col space-y-4"><h1 class="inline pt-10 text-4xl text-skin-primary">React.js复习-diff</h1><div class="text-sm space-x-2 text-skin-muted grid grid-cols-5"><span class="flex align-middle"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline-block mr-1"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>2024-03-21 14:08:32</span><span class="flex align-middle"><svg class="w-5 h-5 inline-block mr-1" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1903" width="20" height="20"><path d="M257.7 752c2 0 4-0.2 6-0.5L431.9 722c2-0.4 3.9-1.3 5.3-2.8l423.9-423.9c3.9-3.9 3.9-10.2 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2c-1.9 11.1 1.5 21.9 9.4 29.8 6.6 6.4 14.9 9.9 23.8 9.9z m67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z" p-id="1904"></path></svg>2024-03-21 20:51:43</span></div></div><div class="mt-8 flex"><div class="w-full flex-auto custom-markdown-body"><div class="markdown-body" id="write">
+      <h2>
+        <span class="prefix"></span>
+        <span class="content">Diff</span>
+        <span class="suffix"></span>
+      </h2>
+    
+      <h3>
+        <span class="prefix"></span>
+        <span class="content">什么 diff</span>
+        <span class="suffix"></span>
+      </h3>
+    <p>简单来讲就是在 <code>re-render</code> 时，以上一次的 <code>fiber</code> 树作为基础，以这次的 vdom 作为目标，生成一个新的 <code>fiber</code> 树，在此过程中尽量复用旧的节点。分别发生在 <code>reconcile</code> 阶段中的 <code>beginWork</code> 和 <code>completeWork</code> 中，在 <code>beginWork</code> 阶段，React 会遍历新的 vdom，并尝试复用旧的 <code>fiber</code> 节点。在 <code>completeWork</code> 阶段，React 会根据新的 vdom 和旧的 <code>fiber</code> 节点的比较结果，生成新的 fiber 树</p>
+<p>第一次渲染时不需要 diff，直接由 vdom 生成 <code>fiber</code> 。再次渲染的时候，会产生新的 vdom，这时候就需要运用 diff 算法。</p>
+<p>传统的 diff 算法，对于树的处理，时间复杂度在 O(n^3)，这对于前端框架来说太慢了，开销过于高昂，因此为降低时间复杂度，React 的 diff 算法会预设三个限制</p>
+<ol>
+<li><p>只进行同层比较</p>
+</li>
+<li><p>节点 <code>type</code> 不同时，直接删除节点（及其子孙节点）</p>
+</li>
+<li><p>根据 <code>key</code> 来复用节点</p>
+</li>
+</ol>
+
+      <h2>
+        <span class="prefix"></span>
+        <span class="content">为什么要有 diff</span>
+        <span class="suffix"></span>
+      </h2>
+    <p>为什么要做 diff 呢？直接使用新的 vdom 替换不可以吗？ 🤔</p>
+<p>可以是可以，但无法实现一些功能，比如保持输入框的聚焦状态，丝滑的动画等等，而且频繁创建 dom 节点对浏览器也是不小的负担。</p>
+<p>诶，那我们就不能自己来决定哪些 dom 更新吗？这样性能不更高效吗？</p>
+<p>可以滴，对于复杂页面，程序员表示这 diff 谁爱做谁做，更新一个节点掉一根头发 👨‍🦲</p>
+<p><strong>SSR 并没有 diff</strong></p>
+
+      <h3>
+        <span class="prefix"></span>
+        <span class="content">性能</span>
+        <span class="suffix"></span>
+      </h3>
+    <ol>
+<li><p>合并大量 dom 操作并进行统一处理，减少重绘重排次数</p>
+</li>
+<li><p>复用 dom 节点，减少创建/删除 dom 节点次数，而非全量重渲</p>
+</li>
+</ol>
+
+      <h3>
+        <span class="prefix"></span>
+        <span class="content">状态</span>
+        <span class="suffix"></span>
+      </h3>
+    <ol>
+<li><p>保持某些特殊的状态</p>
+</li>
+<li><p>实现更细滑的动画</p>
+</li>
+</ol>
+
+      <h2>
+        <span class="prefix"></span>
+        <span class="content">如何实现 diff</span>
+        <span class="suffix"></span>
+      </h2>
+    <p>核心--<strong>复用</strong></p>
+<p>总结：同层比较，使用 <code>key</code> 和 <code>type</code> 决定节点的更新类型（新增、删除、移动）。由于是单链表对比，无法使用双指针优化，需要经过两次遍历对比出结果：</p>
+<ol>
+<li><p>第一轮对比<code>key</code>，直至遇到 <code>key</code> 不一致的节点</p>
+</li>
+<li><p>第二轮 todo</p>
+</li>
+</ol>
+</div></div></div></article></div></main><footer class="flex flex-col items-center justify-center leading-8 text-sm w-full py-2 border-t text-skin-muted"><p>Designed &amp; developed by<a class="ml-1 text-yellow" target="_blank" href="https://github.com/mrrs878" rel="noreferrer">Mr.RS</a></p><p>©<!-- --> <!-- -->2024</p></footer></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"post":{"title":"React.js复习-diff","tags":["React.js"],"categories":"2024复习","description":"## Diff\n\n### 什么 diff\n\n简单来讲就是在 `re-render` 时，以上一次的 `fiber` 树作为基础，以这次的 vdom 作为目标，生成一个新的 `fiber` 树，在此过程中尽量复用旧的节点。分别发生在 `reconcile` 阶段中的 `beginWork` 和 `completeWork` 中，在 `beginWork` 阶段，React 会遍历新的 vdom，并","createDate":"2024-03-21 14:08:32","updateDate":"2024-03-21 20:51:43","body":"\n      \u003ch2\u003e\n        \u003cspan class=\"prefix\"\u003e\u003c/span\u003e\n        \u003cspan class=\"content\"\u003eDiff\u003c/span\u003e\n        \u003cspan class=\"suffix\"\u003e\u003c/span\u003e\n      \u003c/h2\u003e\n    \n      \u003ch3\u003e\n        \u003cspan class=\"prefix\"\u003e\u003c/span\u003e\n        \u003cspan class=\"content\"\u003e什么 diff\u003c/span\u003e\n        \u003cspan class=\"suffix\"\u003e\u003c/span\u003e\n      \u003c/h3\u003e\n    \u003cp\u003e简单来讲就是在 \u003ccode\u003ere-render\u003c/code\u003e 时，以上一次的 \u003ccode\u003efiber\u003c/code\u003e 树作为基础，以这次的 vdom 作为目标，生成一个新的 \u003ccode\u003efiber\u003c/code\u003e 树，在此过程中尽量复用旧的节点。分别发生在 \u003ccode\u003ereconcile\u003c/code\u003e 阶段中的 \u003ccode\u003ebeginWork\u003c/code\u003e 和 \u003ccode\u003ecompleteWork\u003c/code\u003e 中，在 \u003ccode\u003ebeginWork\u003c/code\u003e 阶段，React 会遍历新的 vdom，并尝试复用旧的 \u003ccode\u003efiber\u003c/code\u003e 节点。在 \u003ccode\u003ecompleteWork\u003c/code\u003e 阶段，React 会根据新的 vdom 和旧的 \u003ccode\u003efiber\u003c/code\u003e 节点的比较结果，生成新的 fiber 树\u003c/p\u003e\n\u003cp\u003e第一次渲染时不需要 diff，直接由 vdom 生成 \u003ccode\u003efiber\u003c/code\u003e 。再次渲染的时候，会产生新的 vdom，这时候就需要运用 diff 算法。\u003c/p\u003e\n\u003cp\u003e传统的 diff 算法，对于树的处理，时间复杂度在 O(n^3)，这对于前端框架来说太慢了，开销过于高昂，因此为降低时间复杂度，React 的 diff 算法会预设三个限制\u003c/p\u003e\n\u003col\u003e\n\u003cli\u003e\u003cp\u003e只进行同层比较\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\u003cp\u003e节点 \u003ccode\u003etype\u003c/code\u003e 不同时，直接删除节点（及其子孙节点）\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\u003cp\u003e根据 \u003ccode\u003ekey\u003c/code\u003e 来复用节点\u003c/p\u003e\n\u003c/li\u003e\n\u003c/ol\u003e\n\n      \u003ch2\u003e\n        \u003cspan class=\"prefix\"\u003e\u003c/span\u003e\n        \u003cspan class=\"content\"\u003e为什么要有 diff\u003c/span\u003e\n        \u003cspan class=\"suffix\"\u003e\u003c/span\u003e\n      \u003c/h2\u003e\n    \u003cp\u003e为什么要做 diff 呢？直接使用新的 vdom 替换不可以吗？ 🤔\u003c/p\u003e\n\u003cp\u003e可以是可以，但无法实现一些功能，比如保持输入框的聚焦状态，丝滑的动画等等，而且频繁创建 dom 节点对浏览器也是不小的负担。\u003c/p\u003e\n\u003cp\u003e诶，那我们就不能自己来决定哪些 dom 更新吗？这样性能不更高效吗？\u003c/p\u003e\n\u003cp\u003e可以滴，对于复杂页面，程序员表示这 diff 谁爱做谁做，更新一个节点掉一根头发 👨‍🦲\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eSSR 并没有 diff\u003c/strong\u003e\u003c/p\u003e\n\n      \u003ch3\u003e\n        \u003cspan class=\"prefix\"\u003e\u003c/span\u003e\n        \u003cspan class=\"content\"\u003e性能\u003c/span\u003e\n        \u003cspan class=\"suffix\"\u003e\u003c/span\u003e\n      \u003c/h3\u003e\n    \u003col\u003e\n\u003cli\u003e\u003cp\u003e合并大量 dom 操作并进行统一处理，减少重绘重排次数\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\u003cp\u003e复用 dom 节点，减少创建/删除 dom 节点次数，而非全量重渲\u003c/p\u003e\n\u003c/li\u003e\n\u003c/ol\u003e\n\n      \u003ch3\u003e\n        \u003cspan class=\"prefix\"\u003e\u003c/span\u003e\n        \u003cspan class=\"content\"\u003e状态\u003c/span\u003e\n        \u003cspan class=\"suffix\"\u003e\u003c/span\u003e\n      \u003c/h3\u003e\n    \u003col\u003e\n\u003cli\u003e\u003cp\u003e保持某些特殊的状态\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\u003cp\u003e实现更细滑的动画\u003c/p\u003e\n\u003c/li\u003e\n\u003c/ol\u003e\n\n      \u003ch2\u003e\n        \u003cspan class=\"prefix\"\u003e\u003c/span\u003e\n        \u003cspan class=\"content\"\u003e如何实现 diff\u003c/span\u003e\n        \u003cspan class=\"suffix\"\u003e\u003c/span\u003e\n      \u003c/h2\u003e\n    \u003cp\u003e核心--\u003cstrong\u003e复用\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003e总结：同层比较，使用 \u003ccode\u003ekey\u003c/code\u003e 和 \u003ccode\u003etype\u003c/code\u003e 决定节点的更新类型（新增、删除、移动）。由于是单链表对比，无法使用双指针优化，需要经过两次遍历对比出结果：\u003c/p\u003e\n\u003col\u003e\n\u003cli\u003e\u003cp\u003e第一轮对比\u003ccode\u003ekey\u003c/code\u003e，直至遇到 \u003ccode\u003ekey\u003c/code\u003e 不一致的节点\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\u003cp\u003e第二轮 todo\u003c/p\u003e\n\u003c/li\u003e\n\u003c/ol\u003e\n"}},"__N_SSG":true},"page":"/post/[title]","query":{"title":"React.js复习-diff"},"buildId":"GZFJR6a1QTyOSF1RGsgpY","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>
