@@ -49,10 +49,56 @@ updateDate: "2024-03-21 20:51:43"
 
 ## 如何实现 diff
 
+**以下过程发生在 render 阶段**
+
 核心--**复用**
 
 总结：同层比较，使用 `key` 和 `type` 决定节点的更新类型（新增、删除、移动）。由于是单链表对比，无法使用双指针优化，需要经过两次遍历对比出结果：
 
 1. 第一轮对比`key`，直至遇到 `key` 不一致的节点
 
-2. 第二轮 todo
+2. 第二轮，将剩下的 `fiber` 节点存入 `map` 中，继续遍历剩下的新的 `element` ，从 map 中查找是否能复用
+
+### 节点移动逻辑
+
+新增/删除逻辑较为简单，这里着重研究一下节点**移动**逻辑
+
+以 👇 的数据为例
+
+```html
+<!-- before -->
+<ul>
+  <li id="A" key="A"></li>
+  <li id="B" key="B"></li>
+  <li id="C" key="C"></li>
+  <li id="D" key="D"></li>
+  <li id="E" key="E"></li>
+</ul>
+<!-- after -->
+<ul>
+  <li id="A" key="A"></li>
+  <li id="C" key="C"></li>
+  <li id="B" key="B1"></li>
+  <li id="D" key="D"></li>
+  <li id="E1" key="E1"></li>
+</ul>
+```
+
+其中，删除了 `li#B` 和 `li#E` ，新增了 `li#B1` 和 `li#E1` ，将 `li#C` 向前移动
+
+第一轮遍历，到达 `li#C` 时即停止，将 `li#B` 至 `li#E` 存至 `existingChildren` 中，以 `key` 或 `index` 作为键，更新 `lastPlacedIndex` 为 0, 开启第二轮遍历。
+
+发现 `li#C` 可以复用，将其从 `existingChildren` 中删除，并更新 `lastPlacedIndex` 为 2 （在 `existingChildren` 中的位置）；继续遍历
+
+发现 `li#B` 为新增
+
+发现 `li#D` 可复用，并且 `li#D` 的 `index` 小于 `lastPlacedIndex` ， `li#D` 不用移动，同时更新 `existingChildren` 为 3
+
+发现 `li#E` 为新增
+
+遍历结束，标记 `existingChildren` 中其余节点为删除
+
+## 关联
+
+[双指针]()
+[深度优先遍历]()
