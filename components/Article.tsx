@@ -2,7 +2,7 @@
  * @Author: mrrs878@foxmail.com
  * @Date: 2022-01-19 11:30:40
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2024-03-25 20:20:18
+ * @LastEditTime: 2024-03-25 20:23:31
  */
 
 import { FC } from 'react';
@@ -24,18 +24,18 @@ const Article: FC<IArticleProps> = ({
         <span className="text-skin-muted">{ createDate }</span>
       </div>
       <p className="max-w-3xl leading-8 text-xs text-skin-muted">{ description }</p>
-      <div>
-        <div className="flex justify-between align-middle">
+      <div className="flex justify-between align-middle">
+        <div>
           {
             tags?.map((tag) => (
               <span key={tag} className="border px-2 py-1 rounded-sm text-xs mb-2 mr-2 cursor-pointer whitespace-nowrap inline-block text-yellow">{ tag }</span>
             ))
           }
-          <span className="text-sm">
-            编辑于
-            {updateDate}
-          </span>
         </div>
+        <span className="text-sm">
+          编辑于
+          {updateDate}
+        </span>
       </div>
     </div>
     <span className="absolute transition opacity-0 group-hover:opacity-100 -right-8">
