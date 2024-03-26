@@ -4,7 +4,7 @@ tags: "JavaScript"
 categories: "2021复习"
 description: ""
 createDate: "2021-05-07 14:34:34"
-updateDate: "2024-03-25 20:49:44"
+updateDate: "2024-03-26 20:30:44"
 ---
 
 
@@ -20,9 +20,21 @@ updateDate: "2024-03-25 20:49:44"
 
 ## Symbol和Bigint
 
-`Symbol`表示唯一、不可变的值。用于确保对象属性使用唯一标识符，不会发生属性名冲突的危险
+`Symbol`表示唯一、不可变的值。用于确保对象属性使用唯一标识符，不会发生属性名冲突的危险； `Symbol.for`返回一致的结果
 
 `BigInt`是一种数字类型的数据，它可以表示任意精度格式的整数，使用`BigInt`可以安全地存储和操作大整数，即使这个数已经超出了 Number 能够表示的安全整数范围
+
+常见 `Symbol` 
+``` js
+// Object.prototype.toString
+Symbol.toStringTag
+
+// 将对象转换为相应的原始值（隐式类型转换）
+Symbol.toPrimitive
+
+// 迭代器
+Symbol.Iterator
+```
 
 ## var vs let/const
 
