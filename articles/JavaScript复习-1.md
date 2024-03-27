@@ -4,15 +4,15 @@ tags: "JavaScript"
 categories: "2021复习"
 description: ""
 createDate: "2021-05-11 14:27:01"
-updateDate: "2021-06-15 23:15:37"
+updateDate: "2024-03-27 20:15:37"
 ---
 
 
-## Proxy和Reflect
+## Proxy
 
-可以给目标对象定义一个关联的对象，而这个代理对象可以作为抽象的目标对象来使用。默认情况下，在代理对象上执行的所有操作都会无障碍地传播到目标对象。使用`new Proxy(target, handler)`来创建
+`Proxy` 可以给目标对象定义一个关联的对象，而这个代理对象可以作为抽象的目标对象来使用。默认情况下，在代理对象上执行的所有操作都会无障碍地传播到目标对象。使用`new Proxy(target, handler)`来创建
 
-`handler`对象中所有可以捕获的方法都有对应的反射`Reflect` API方法，这些方法与捕获器拦截的方法具有相同的名称，也具有与被拦截方法相同的行为
+`handler`对象中所有可以捕获的方法都有对应的反射 `Reflect` API方法，这些方法与捕获器拦截的方法具有相同的名称，也具有与被拦截方法相同的行为
 
 ``` js
 const target = {
@@ -58,7 +58,7 @@ function myInstanceof(instance, object) {
 
 一种性能优化手段，避免函数过多执行（多用来优化滑动/点击事件回调）
 
-防抖:：在规定的时间内若再次触发则重新及时
+防抖：在规定的时间内若再次触发则重新计时
 
 节流：在规定的时间内若再次触发(触发间隔大于规定的时间)只会执行一次
 
@@ -86,9 +86,7 @@ function debounce(cb, timeout) {
 
   return _denounce;
 }
-```
 
-``` js
 function throttle(cb, timeout) {
   let lastTime = 0;
   let canceled = false;
