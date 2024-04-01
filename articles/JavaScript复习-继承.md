@@ -4,7 +4,7 @@ tags: "JavaScript"
 categories: "2021复习"
 description: ""
 createDate: "2021-05-10 14:17:07"
-updateDate: "2021-06-10 18:24:51"
+updateDate: "2024-03-29 18:24:51"
 ---
 
 
@@ -12,7 +12,7 @@ updateDate: "2021-06-10 18:24:51"
 
 ## 基于原型链
 
-每个构造函数都有一个原型对象，原型有一个属性指回构造函数，而实例有一个内部指针指向原型。如果原型是另一个类型的实例呢？那就意味着这个原型本身有一个内部指针指向另一个原型，相应地另一个原型也可能是一个对象...这样就在实例和原型之间构造了一条原型链
+每个构造函数都有一个原型对象，原型对象有一个属性指回构造函数，而实例有一个内部指针指向原型。如果原型是另一个类型的实例呢？那就意味着这个原型本身有一个内部指针指向另一个原型，相应地另一个原型也可能是一个对象...这样就在实例和原型之间构造了一条原型链
 
 ``` js
 function SuperType() {
@@ -26,7 +26,7 @@ function SubType() {
     this.property = false;
 }
 SubType.prototype = new SuperType();
-    SubType.prototype.getSubValue = function () {
+SubType.prototype.getSubValue = function () {
     return this.property;
 }
 
@@ -37,8 +37,6 @@ console.log(instance2.getSuperValue());
 // false
 // false
 ```
-
-`getSuperTypeValue()`方法还在`SuperType.prototype`上，而`prototype`却在`SubType.prototype`上。这是因为`getSuperType()`是一个原型方法，而`property`是一个实例属性
 
 ![基于原型链模式的继承](https://mrrsblog.oss-cn-shanghai.aliyuncs.com/extends_prototype.png)
 

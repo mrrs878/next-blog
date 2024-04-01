@@ -156,31 +156,82 @@ export default {}
 |          | CommonJS     | ESM            |
 | -- | -- | -- |
 | 加载时间 | 运行时加载   | 编译时输出接口 |
-| 输出方式 | 值的拷贝     | 值的引用       |
+| 输出方式 | 原始类型为值的拷贝，引用类型为值的引用(指针)     | 值的引用(指针)       |
 
 #### 输出方式比对
 ``` js
 // CommonJS
 let a = 1;
+let obj = {
+    a: 1,
+}
 function increaseA() {
     a += 1;
+    obj.a += 1;
 }
-module.exports = { a, increaseA };
+module.exports = { a, increaseA, obj };
 
-console.log(a); // 1
+console.log(a, obj); // 1 { a: 1 }
 increaseA();
-console.log(a); // 1
+console.log(a); // 1 { a: 2 }
 
 // ESM
 let b = 1;
+let obj = {
+    b: 1,
+}
 function increaseB() {
     b += 1;
+    obj.b += 1;
 }
-export { b, increaseB };
+export { b, increaseB, obj };
 
-console.log(b); // 1
+console.log(b); // 1 { b: 1 }
 increaseB();
-conosle.log(b); // 2
+console.log(b); // 2 { b: 1 }
+```
+
+#### ESM如何解决循环依赖问题
+
+ESM 在编译时会构建出一份模块之间的关系图，会标记*加载中*的模块，这样便可识别出哪些模块间存在循环依赖；同时，在 ESM 模块中，导入的变量实际上是对导出变量的引用，这些引用被称为 **顶层引用** 。当存在循环依赖时，模块将导出一个未完成的值(undefined)给依赖模块，而不是抛出异常。但当引用*加载中*模块导出的变量时，会报错。
+
+``` js
+// a.js
+import { foo } from './circle-b.mjs';
+
+console.log("a.js is loading");
+
+export const bar = 'bar';
+
+// b.js
+import { bar } from './circle-a.mjs';
+
+console.log("b.js is loading");
+
+export const foo = 'foo';
+
+// node circle-a.mjs
+// b.js is loading
+// a.js is loading
+```
+
+0. 当执行 a.js 时，标记 a.js 为 “获取中”
+1. 当 a.js 导入 b.js 时，ESM 会标记 b.js 为“获取中”，以避免再次进入。
+2. 当 b.js 导入 a.js 时，ESM 会发现 a.js 已经被标记为“获取中”，因此不会再次进入。
+3. 这样，循环引用不会导致死循环。
+
+但当 `circle-b.mjs` 引用 `bar` 时，则会报错
+
+``` js
+// b.js
+import { bar } from './circle-a.mjs';
+
+// 在这里直接引用 foo
+console.log("a.js is loading", bar);
+
+export const foo = 'foo';
+
+// 报错 ReferenceError: Cannot access 'bar' before initialization
 ```
 
 ### webpack/browserify

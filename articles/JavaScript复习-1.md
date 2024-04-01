@@ -215,7 +215,7 @@ function fibPerform(num) {
 
 - 当在`value`存在循环引用时会抛出异常`TypError("cyclic object value")`
 - 当尝试去转换`BigInt`类型的值会抛出`TypeError("BigInt value can't be serialized in JSON")`
-- 如果`vaule`存在`toJSON()`方法，则返回该函数返回值
+- 如果`value`存在`toJSON()`方法，则返回该函数返回值
 - 非数组对象的属性不能保证以特定的顺序出现在序列化后的字符串中
 - `Boolean`、`Number`、`String`包装对象会在序列化过程中自动转换为原始值
 - 非数组对象的属性值为`undefined`、任意的函数、`symbol`会在序列化中被忽略，数组对象则会转换成`null`
@@ -294,13 +294,11 @@ students.findIndex((item) => item.name === 'tom' && item.age === 23) // 0
 
 ## WeakMap
 
-在JavaScript中，map API可以通过使用其四个API方法共用两个数组（一个存放key，一个存放value）来实现。给这种map设置value时会同时将key和value添加到这两个数组的尾部。从而使得key和value的索引在两个数组中相对应。当从该map取值的时候，需要遍历所有的key，然后再使用索引从存储value的数组中检索出相应的value
+在JavaScript中， `Map` 有一个缺点是可能导致内存泄漏，因为 `map` 会一直引用着每个 `key` 和 `value` 。这种引用使得垃圾回收算法不能回收处理它们，即使没有其他引用存在了。
 
-但这样的实现会有两个很大的缺点，首先赋值和搜索操作都是O(n)的时间复杂度。另一个缺点是可能导致内存泄漏，因为数组会一直引用着每个key和value。这种引用使得垃圾回收算法不能回收处理它们，即使没有其他引用存在了
+相比之下，原生的 `WeakMap` 持有的是每个 `key-value` 的**弱引用**关系，这意味着一旦 `key` 被回收，那么在 `WeakMap` 中相应的 `value` 便成为了进行垃圾回收的候选对象。
 
-相比之下，原生的WeakMap持有的是每个键对象的**弱引用**，这意味着没有其他引用存在时垃圾回收能正确进行。原生的WeakMap的结构是特殊且**有效**的，其用于映射的key只有在其没有被回收时才是有效的
-
-正由于这样的弱引用，WeakMap的key是**不可枚举**的（没有办法给出所有的key，key取决于垃圾回收器的状态，是不可预知的）。如果key是可枚举的，其列表将会受垃圾回收机制的影响，从而得到不确定的结果。
+正由于这样的弱引用， `WeakMap` 的 `key` 是**不可枚举**的（没有办法给出所有的 `key` ，取决于垃圾回收器的状态，是不可预知的）。如果 `key` 是可枚举的，其列表将会受垃圾回收机制的影响，从而得到不确定的结果。
 
 ## 参考
 
