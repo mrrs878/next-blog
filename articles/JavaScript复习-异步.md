@@ -4,7 +4,7 @@ tags: "JavaScript Promise Generator Promise"
 categories: "2021复习"
 description: ""
 createDate: "2021-05-12 10:36:56"
-updateDate: "2021-06-24 18:47:28"
+updateDate: "2024-04-07 19:47:28"
 ---
 
 
@@ -76,6 +76,8 @@ ES6提供的一种异步编程方案
 `then()` 或者 `catch()` 的参数期望是函数，传⼊⾮函数则会发⽣值透传`(value
 => value)`
 
+`Promise` 的异步特性: 它们是同步对象(在同步执行模式中使用)，但也是异步执行模式的媒介。
+
 ``` js
 Promise.resolve(1)
  .then(2) // .then(1 => 1)
@@ -132,9 +134,9 @@ new Promise((resolve,reject)=>{
 })
 ```
 
-简单来讲就是then回调的注册需要上一个then里面的同步代码执行完毕
+简单来讲就是 **`then` 回调的注册需要上一个 `then` 里面的同步代码执行完毕**
 
-拿上面的代码来讲，当外部第1个then里的resovle()执行完毕后，该Promise的状态已经更改，会将内部第1个then回调添加（注册）到微任务队列中；内部第2个then由于上一个then回调没有执行完毕，因此不会注册。此时外部第1个then里的同步代码执行完毕，会注册外部第2个then回调
+拿上面的代码来讲，当外部第1个 `then` 里的 `resolve()` 执行完毕后，该 `Promise` 的状态已经更改，会将内部第1个 `then` 回调添加（注册）到微任务队列中；内部第2个 `then` 由于上一个 `then` 回调没有执行完毕，因此不会注册。此时外部第1个 `then` 里的同步代码执行完毕，会注册外部第2个 `then` 回调
 
 整理一下：then回调注册的顺序是：外部第1个then --> 内部第1个then --> 外部第2个then --> 内部第2个then
 
@@ -216,5 +218,7 @@ testGAsync().then((result) => {
 ## 参考
 
 [MDN-Promise](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+
+[深度揭秘 Promise 微任务注册和执行过程](https://juejin.cn/post/6844903987183894535)
 
 [co-share](https://github.com/imtaotao/co-share)
