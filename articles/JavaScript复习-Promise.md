@@ -4,7 +4,7 @@ tags: "JavaScript Promise Generator Promise"
 categories: "2024复习"
 description: ""
 createDate: "2024-04-07 19:38:54"
-updateDate: "2024-04-08 19:47:28"
+updateDate: "2024-04-09 10:30:28"
 ---
 
 深入研究一下 `Promise`
@@ -44,12 +44,15 @@ console.log('hello Promise');
 ```
 
 Q1: 为什么 `hello Promise` 在较前打印？
+
 A1: 因为 **非重入期约方法** 机制，即： 当 `Promise` 进入 `Settled` 状态时，与该状态相关的处理程序仅仅会被排期（进入微任务队列），而非立即执行。跟在添加这个处理程序的代码之后的同步代码一定会在处理程序之前执行。 `new Promise` 中的代码是同步的， `then` 方法中的处理程序是才是异步的。
 
 Q2: 为什么 `promise2 then1` 在 `promise1 then2` 前打印
+
 A2: 当打印 `promise2 resolve` 后，此时 `promise2` 进入 `Settled` 状态，此时会将 `promise2-then1` 添加进微任务队列，注意此时仍在**执行微任务队列中**的任务中，因此，接下来会打印 `promise2 then1` 。
 
 Q3: 为什么 `promise1 then2` 在 `promise2 then2` 前打印
+
 A3: 当打印完 `promise2 then1` 时，按理说应该注册 `promise2-then2` 回调，但编译器会优化，防止一个 `Promise` 占据过多时间。即**如果有多个fulfilled的Promise实例，同时执行then链式调用，then会交替执行。**
 
 ## 为什么 Promise 状态不可逆
