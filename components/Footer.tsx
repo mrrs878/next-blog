@@ -2,7 +2,7 @@
 * @Author: mrrs878@foxmail.com
 * @Date: 2022-01-19 20:07:46
  * @LastEditors: mrrs878@foxmail.com
- * @LastEditTime: 2022-01-22 16:42:37
+ * @LastEditTime: 2024-04-10 19:30:49
 */
 
 /* eslint-disable @next/next/no-img-element */
@@ -14,8 +14,6 @@ const Footer = () => (
       <a className="ml-1 text-yellow" target="_blank" href="https://github.com/mrrs878" rel="noreferrer">Mr.RS</a>
     </p>
     <p>
-      &copy;
-      {' '}
       {new Date().getFullYear()}
     </p>
     {/* <div className="flex items-center justify-center">
