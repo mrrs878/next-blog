@@ -4,8 +4,12 @@ tags: "webpack loader"
 categories: "2024复习"
 description: ""
 createDate: "2024-04-17 20:18:27"
-updateDate: "2024-04-17 20:37:36"
+updateDate: "2024-04-18 20:04:36"
 ---
+
+## loader
+
+用来处理非 `javascript` 、 `json` 文件
 
 ## normal loader VS pitch loader
 
@@ -31,6 +35,7 @@ styleLoader.pitch = (remainingRequest, previousRequest, data) => {
    *
    * remainingRequest: xxx/node_modules/.pnpm/css-loader@7.1.1_webpack@5.91.0/node_modules/css-loader/dist/cjs.js!xxx/src/index.css
    */
+  // 当返回值
 };
 ```
 
@@ -46,7 +51,9 @@ styleLoader.pitch = (remainingRequest, previousRequest, data) => {
 
 ## 为什么需要 pitch loader
 
-// TODO
+实现一些特殊（取巧）逻辑
+
+正常情况下， `loader` 的执行顺序为从右至左串型执行，且上一个 `loader` 的返回值为下一个 `loader` 的入参，假如要设计这么一个 `cache-loader` ，其作用是缓存上一次 `loader` 构建的结果，因此我们需要将 `cache-loader` 放在最左边，保证其最后执行。按照正常的执行顺序，每次构建时其余 `loader` 都会重新执行，这样就其不到作用。这时候，我们就可以给 `cache-loader` 增加 `pitch` 方法，在 `pitch` 阶段直接根据条件返回缓存的结果直接 **熔断** 其余 `loader` 的执行
 
 ## 参考
 
