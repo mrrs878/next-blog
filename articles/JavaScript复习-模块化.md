@@ -4,7 +4,7 @@ tags: "JavaScript 模块化"
 categories: "2021复习"
 description: ""
 createDate: "2021-05-12 04:30:39"
-updateDate: "2024-04-01 23:26:16"
+updateDate: "2024-04-19 20:06:16"
 ---
 
 
@@ -173,7 +173,7 @@ module.exports = { a, increaseA, obj };
 
 console.log(a, obj); // 1 { a: 1 }
 increaseA();
-console.log(a); // 1 { a: 2 }
+console.log(a, obj); // 1 { a: 2 }
 
 // ESM
 let b = 1;
@@ -186,9 +186,9 @@ function increaseB() {
 }
 export { b, increaseB, obj };
 
-console.log(b); // 1 { b: 1 }
+console.log(b, obj); // 1 { b: 1 }
 increaseB();
-console.log(b); // 2 { b: 1 }
+console.log(b, obj); // 2 { b: 2 }
 ```
 
 #### ESM如何解决循环依赖问题
