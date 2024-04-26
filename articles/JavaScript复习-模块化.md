@@ -4,7 +4,7 @@ tags: "JavaScript 模块化"
 categories: "2021复习"
 description: ""
 createDate: "2021-05-12 04:30:39"
-updateDate: "2024-04-19 20:06:16"
+updateDate: "2024-04-26 20:01:16"
 ---
 
 
@@ -190,6 +190,8 @@ console.log(b, obj); // 1 { b: 1 }
 increaseB();
 console.log(b, obj); // 2 { b: 2 }
 ```
+
+**当使用 `export default b` 时， `increaseB` 后打印的值是一样的**
 
 #### ESM如何解决循环依赖问题
 
