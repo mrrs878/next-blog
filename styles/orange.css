@@ -249,7 +249,8 @@ pre code {
 pre::before {
   content: '';
   display: block;
-  background: url(/img/point.png);
+  /* 需与 .env 中的 NEXT_PUBLIC_BASE_PATH 保持一致 */
+  background: url(/next-blog/img/point.png);
   height: 30px;
   width: 100%;
   background-size: 40px;

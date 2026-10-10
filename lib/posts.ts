@@ -10,6 +10,14 @@ import matter from 'gray-matter';
 import { marked } from 'marked';
 import hljs from 'highlight.js';
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
+// 把 markdown 渲染结果里的根路径引用（src/href="/xxx"）加上 basePath 前缀，
+// 避免部署到 GitHub Pages 子路径后图片、内链等静态资源 404
+const withBasePath = (html: string) => (
+  basePath ? html.replace(/(src|href)="\//g, `$1="${basePath}/`) : html
+);
+
 marked.setOptions({
   renderer: new marked.Renderer(),
   highlight(code, lang) {
@@ -44,7 +52,7 @@ export async function getPost(slug: string) {
     data,
     content,
   } = matter(source);
-  const body = marked.parse(content);
+  const body = withBasePath(marked.parse(content));
   return ({
     ...data,
     body,

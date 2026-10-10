@@ -6,7 +6,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "export": "next export && cp CNAME out/CNAME",
+    "export": "next export",
     "prepare": "husky install"
   },
   "dependencies": {
